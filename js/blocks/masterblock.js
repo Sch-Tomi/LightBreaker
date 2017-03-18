@@ -1,5 +1,5 @@
 class MasterBlock {
-  constructor(img,angle,x,y) {
+  constructor(img,angle,x,y,moving,rotating) {
 
     this._x = x
     this._y = y
@@ -9,6 +9,14 @@ class MasterBlock {
     this._img = new Image()
     this._img.src = img
 
+    this._moving = moving
+    this._rotating = rotating
+
+  }
+
+  canvas_repositioning(x,y){
+    this._x += x
+    this._y += y
   }
 
   get_x(){
@@ -16,7 +24,9 @@ class MasterBlock {
   }
 
   set_x(x){
-    this._x = x
+    if (this._moving) {
+      this._x = x
+    }
   }
 
   get_y(){
@@ -24,7 +34,9 @@ class MasterBlock {
   }
 
   set_y(y){
-    this._y = y
+    if (this._moving) {
+      this._y = y
+    }
   }
 
   get_img(){
@@ -36,11 +48,19 @@ class MasterBlock {
   }
 
   rotate_left(){
-    this._angle -= 90
+    if (this._rotating) {
+      this._angle -= 90
+    }
   }
 
   rotate_right(){
-    this._angle += 90
+    if (this._rotating) {
+      this._angle += 90
+    }
+  }
+
+  locked(){
+    return !this._rotating
   }
 
 }

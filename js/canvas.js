@@ -17,6 +17,10 @@ class Canvas {
     this.cell_wh = this.cell_w / 2
     this.table_p = 2
 
+
+    this._lock = new Image()
+    this._lock.src = "img/lock.png"
+
   }
 
   drawBoard(){
@@ -48,13 +52,16 @@ class Canvas {
 
     for (var block of this.blocks) {
       this.drawRotatedImage(block.get_img(),block.get_x(),block.get_y(),block.get_angle());
+
+      if (block.locked()) {
+        this.drawLock(block)
+      }
     }
 
   }
 
   addBlock(block){
-    block.set_x(block.get_x()+2)
-    block.set_y(block.get_y()+2)
+    block.canvas_repositioning(this.table_p,this.table_p)
     this.blocks.push(block)
   }
 
@@ -77,8 +84,6 @@ class Canvas {
   }
 
   mouseClick(e){
-
-    console.log("HEY");
 
     this.searchBlock(e.clientX,e.clientY)
 
@@ -115,7 +120,7 @@ class Canvas {
 
   //http://creativejs.com/2012/01/day-10-drawing-rotated-images-into-canvas/
 
-  // ELMOSÓDIK?! 
+  // ELMOSÓDIK?!
   drawRotatedImage(image, x, y, angle){
     var TO_RADIANS = Math.PI/180;
   	// save the current co-ordinate system
@@ -131,10 +136,14 @@ class Canvas {
 
   	// draw it up and to the left by half the width
   	// and height of the image
-  	this.ctx.drawImage(image, -(image.width/2), -(image.height/2));
+  	this.ctx.drawImage(image, -(Math.round(image.width/2)), -(Math.round(image.height/2)));
 
   	// and restore the co-ords to how they were when we began
   	this.ctx.restore();
+  }
+
+  drawLock(block){
+    this.ctx.drawImage(this._lock, block.get_x()+20, block.get_y()-40)
   }
 
 }
