@@ -15,8 +15,8 @@ class MasterBlock {
   }
 
   canvas_repositioning(x,y){
-    this._x += x
-    this._y += y
+    this._x = x
+    this._y = y
   }
 
   get_x(){

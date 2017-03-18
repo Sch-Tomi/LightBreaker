@@ -87,7 +87,12 @@ class Canvas {
   }
 
   addBlock(block){
-    block.canvas_repositioning(this.table_p,this.table_p)
+    var x = block.get_x()*this.cell_w + this.cell_wh + this.table_p
+    var y = block.get_y()*this.cell_w + this.cell_wh + this.table_p
+
+    console.log("("+x+", "+y+")");
+
+    block.canvas_repositioning(x,y)
     this.blocks.push(block)
   }
 
@@ -179,7 +184,7 @@ class Canvas {
     var x = row * this.cell_wh
     var y = col * this.cell_wh
 
-    console.log("("+x+", "+y+")");
+
 
     if(x > this._board_w || y > this._board_w){
       this.parkingBlock(block)
@@ -188,6 +193,7 @@ class Canvas {
       if((x - 45) % 90 > 0 || (y - 45) % 90 > 0){
         this.parkingBlock(block)
       }else {
+        console.log("("+x+", "+y+")");
         block.set_x(x + this.table_p)
         block.set_y(y + this.table_p)
       }

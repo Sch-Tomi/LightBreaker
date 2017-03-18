@@ -15,7 +15,7 @@ class Game {
 
   run(){
     // Let's play this game!
-    this.canvas.addBlock(new Laser(0,45,45,false,false))
+    this.canvas.addBlock(new Laser(0,4,4,false,false))
     this.canvas.addParkingBlock(new Laser(0,0,0,true,true))
     this.main();
   }
