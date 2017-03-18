@@ -132,6 +132,11 @@ class Canvas {
 
   mouseUp(){
     this.fitBlockToCell()
+
+    if(this.blockCollision()){
+      this.parkingBlock(this.blocks[this.moving_block_id])
+    }
+    
     this.canvas.onmousemove = null
     this.moving_block_id = null
   }
@@ -182,8 +187,19 @@ class Canvas {
     }
   }
 
-  //http://creativejs.com/2012/01/day-10-drawing-rotated-images-into-canvas/
+  blockCollision(){
+    for (var i = 0; i < this.blocks.length; i++) {
+      if(i != this.moving_block_id){
+        if(this.blocks[i].get_x() == this.blocks[this.moving_block_id].get_x() && this.blocks[i].get_y() == this.blocks[this.moving_block_id].get_y() ){
+          return true
+        }
+      }
+    }
+    return false
+  }
 
+
+  //http://creativejs.com/2012/01/day-10-drawing-rotated-images-into-canvas/
   // ELMOSÓDIK?!
   drawRotatedImage(image, x, y, angle){
     var TO_RADIANS = Math.PI/180;
