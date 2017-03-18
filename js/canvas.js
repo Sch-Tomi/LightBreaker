@@ -90,8 +90,6 @@ class Canvas {
     var x = block.get_x()*this.cell_w + this.cell_wh + this.table_p
     var y = block.get_y()*this.cell_w + this.cell_wh + this.table_p
 
-    console.log("("+x+", "+y+")");
-
     block.canvas_repositioning(x,y)
     this.blocks.push(block)
   }
@@ -103,8 +101,9 @@ class Canvas {
 
   parkingBlock(block){
     var free = this.getFreeParking()
+
     block.set_x(545)
-    block.set_y((free+1)*45)
+    block.set_y((free*90)+45)
     this._parking[free] = false
   }
 
