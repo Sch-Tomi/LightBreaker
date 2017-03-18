@@ -15,7 +15,7 @@ class Game {
 
   run(){
     // Let's play this game!
-    this.level2()
+    this.level3()
     this.main();
   }
 
@@ -32,7 +32,19 @@ class Game {
 
     this.canvas.addParkingBlock(new Target(0,0,0,true,true))
     this.canvas.addParkingBlock(new HalfMirror(0,0,0,true,true))
+  }
 
+  level3(){
+    this.canvas.addBlock(new Laser(90,1,2,false,true))
+    this.canvas.addBlock(new Mirror(270,2,0,false,true))
+    this.canvas.addBlock(new Mirror(270,4,0,false,true))
+    this.canvas.addBlock(new Mirror(0,3,2,false,false))
+    this.canvas.addBlock(new DoubleMirror(90,0,4,false,false))
+    this.canvas.addBlock(new CheckPoint(0,4,3,false,false))
+
+    this.canvas.addParkingBlock(new Mirror(0,0,0,true,true))
+    this.canvas.addParkingBlock(new Mirror(0,0,0,true,true))
+    this.canvas.addParkingBlock(new HalfMirror(0,0,0,true,true))
   }
 
 }
