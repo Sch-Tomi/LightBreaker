@@ -26,7 +26,6 @@ class Game {
     // Let's play this game!
     this.then = Date.now();
     this.canvas.addBlock(new Laser(0,45,45,false,false))
-    this.canvas.addBlock(new Laser(90,135,135,false,true))
     this.main();
   }
 }

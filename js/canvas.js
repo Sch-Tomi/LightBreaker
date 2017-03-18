@@ -36,19 +36,41 @@ class Canvas {
     }
 
 
-    for (var x = 0; x <= bh; x += ch) {
-        this.ctx.moveTo(p, 0.5 + x + p)
-        this.ctx.lineTo(bw + p, 0.5 + x + p);
+    for (var y = 0; y <= bh; y += ch) {
+        this.ctx.moveTo(p, 0.5 + y + p)
+        this.ctx.lineTo(bw + p, 0.5 + y + p);
     }
 
     this.ctx.strokeStyle = "black"
     this.ctx.stroke()
   }
 
+  drawParking(){
+    var bw = 90
+    var bh = 450
+    var p  = 500
+    var cw = this.cell_w
+    var ch = this.cell_w
+
+    for (var x = 0; x <= bw; x += cw) {
+        this.ctx.moveTo(0.5 + x + p , 0)
+        this.ctx.lineTo(0.5 + x + p, bh )
+    }
+
+
+    for (var y = 0; y <= bh; y += ch) {
+        this.ctx.moveTo(p, 0.5 + y )
+        this.ctx.lineTo(bw + p, 0.5 + y );
+    }
+
+    this.ctx.strokeStyle = "black"
+    this.ctx.stroke()
+  }
 
   render(){
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.drawBoard()
+    this.drawParking()
 
     for (var block of this.blocks) {
       this.drawRotatedImage(block.get_img(),block.get_x(),block.get_y(),block.get_angle());
