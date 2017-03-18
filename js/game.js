@@ -18,7 +18,6 @@ class Game {
   	this.then = now;
 
   	// Request to do this again ASAP
-
     requestAnimationFrame(()=>this.main());
   }
 
@@ -26,6 +25,7 @@ class Game {
     // Let's play this game!
     this.then = Date.now();
     this.canvas.addBlock(new Laser(0,45,45,false,false))
+    this.canvas.addParkingBlock(new Laser(0,0,0,true,true))
     this.main();
   }
 }

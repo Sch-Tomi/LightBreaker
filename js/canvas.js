@@ -13,6 +13,7 @@ class Canvas {
     this.canvas.onmouseup = (e) => {this.mouseUp(e)}
     this.canvas.ondblclick = (e) => {this.mouseClick(e)}
 
+    this._board_w = 450
     this.cell_w = 90
     this.cell_wh = this.cell_w / 2
     this.table_p = 2
@@ -21,11 +22,14 @@ class Canvas {
     this._lock = new Image()
     this._lock.src = "img/lock.png"
 
+    // true - free | false - reserved
+    this._parking = [true,true,true,true,true]
+
   }
 
   drawBoard(){
-    var bw = 450
-    var bh = 450
+    var bw = this._board_w
+    var bh = this._board_w
     var p  = this.table_p
     var cw = this.cell_w
     var ch = this.cell_w
@@ -87,8 +91,42 @@ class Canvas {
     this.blocks.push(block)
   }
 
+  addParkingBlock(block){
+    this.parkingBlock(block)
+    this.blocks.push(block)
+  }
+
+  parkingBlock(block){
+    var free = this.getFreeParking()
+    block.set_x(545)
+    block.set_y((free+1)*45)
+    this._parking[free] = false
+  }
+
+  getFreeParking(){
+    for (var i = 0; i < this._parking.length; i++) {
+      if (this._parking[i]) {
+        return i
+      }
+    }
+  }
+
+  isInTheParking(block){
+    return block.get_x() > this._board_w
+  }
+
+  getParkingID(block){
+    return Math.round(block.get_y() / 45)-1
+  }
+
   mouseDown(e){
     this.searchBlock(e.clientX,e.clientY)
+
+    if(this.isInTheParking(this.blocks[this.moving_block_id])){
+      var parkingID = this.getParkingID(this.blocks[this.moving_block_id])
+      this._parking[parkingID] = true
+    }
+
     this.canvas.onmousemove = (e) => {this.mouseMove(e)}
   }
 
@@ -136,8 +174,12 @@ class Canvas {
     var x = row * this.cell_wh + this.table_p
     var y = col * this.cell_wh + this.table_p
 
-    block.set_x(x)
-    block.set_y(y)
+    if(x > this._board_w || y > this._board_w){
+      this.parkingBlock(block)
+    }else{
+      block.set_x(x)
+      block.set_y(y)
+    }
   }
 
   //http://creativejs.com/2012/01/day-10-drawing-rotated-images-into-canvas/
