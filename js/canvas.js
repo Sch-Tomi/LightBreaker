@@ -136,7 +136,7 @@ class Canvas {
     if(this.blockCollision()){
       this.parkingBlock(this.blocks[this.moving_block_id])
     }
-    
+
     this.canvas.onmousemove = null
     this.moving_block_id = null
   }
@@ -176,14 +176,22 @@ class Canvas {
     var block = this.blocks[this.moving_block_id]
     var row = Math.round(block.get_x() / this.cell_wh)
     var col = Math.round(block.get_y() / this.cell_wh)
-    var x = row * this.cell_wh + this.table_p
-    var y = col * this.cell_wh + this.table_p
+    var x = row * this.cell_wh
+    var y = col * this.cell_wh
+
+    console.log("("+x+", "+y+")");
 
     if(x > this._board_w || y > this._board_w){
       this.parkingBlock(block)
     }else{
-      block.set_x(x)
-      block.set_y(y)
+      // between 2 cell
+      if((x - 45) % 90 > 0 || (y - 45) % 90 > 0){
+        this.parkingBlock(block)
+      }else {
+        block.set_x(x + this.table_p)
+        block.set_y(y + this.table_p)
+      }
+
     }
   }
 
