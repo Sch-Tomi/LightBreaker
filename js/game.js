@@ -37,11 +37,9 @@ class Game {
 
     levelSelect() {
         this.canvas.clear()
-        console.log(this.selector.options[this.selector.selectedIndex].value);
         switch (parseInt(this.selector.options[this.selector.selectedIndex].value)) {
             case 1:
                 this.level1()
-                console.log('asd');
                 break;
             case 2:
                 this.level2()
