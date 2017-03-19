@@ -4,7 +4,7 @@ class Canvas {
         this.ctx = this.canvas.getContext("2d")
         this.canvas.width = 780
         this.canvas.height = 460
-        document.body.appendChild(this.canvas);
+        document.querySelector("#lightBreaker").appendChild(this.canvas);
 
         this.blocks = []
         this.moving_block_id = null
@@ -90,6 +90,8 @@ class Canvas {
     }
 
     mouseDown(e) {
+        console.log("("+e.clientX+", "+e.clientY+")");
+
         this.searchBlock(e.clientX, e.clientY)
 
         if (this.parking.isInTheParking(this.blocks[this.moving_block_id])) {
