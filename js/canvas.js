@@ -2,8 +2,8 @@ class Canvas {
     constructor() {
         this.canvas = document.createElement("canvas")
         this.ctx = this.canvas.getContext("2d")
-        this.canvas.width = 640
-        this.canvas.height = 480
+        this.canvas.width = 780
+        this.canvas.height = 460
         document.body.appendChild(this.canvas);
 
         this.blocks = []
@@ -22,7 +22,7 @@ class Canvas {
         this._board_w = 450
         this.cell_w = 90
         this.cell_wh = this.cell_w / 2
-        this.table_p = 2
+        this.table_p = 5
 
 
         this._lock = new Image()
@@ -32,10 +32,46 @@ class Canvas {
         this._parking = [true, true, true, true, true]
 
     }
+
     clear() {
         this.blocks = []
         this._parking = [true, true, true, true, true]
     }
+
+    drawTargetNum(){
+        var bw = this.cell_w
+        var bh = this.cell_w
+        var p = this._board_w + 190
+        var cw = this.cell_w
+        var ch = this.cell_w
+
+        for (var x = 0; x <= bw; x += cw) {
+            this.ctx.moveTo(0.5 + x + p, this.table_p + 45)
+            this.ctx.lineTo(0.5 + x + p, bh + this.table_p + 45)
+        }
+
+
+        for (var y = 0; y <= bh; y += ch) {
+            this.ctx.moveTo(p, 0.5 + y + this.table_p + 45)
+            this.ctx.lineTo(bw + p, 0.5 + y + this.table_p + 45);
+        }
+
+        this.ctx.strokeStyle = "black"
+        this.ctx.stroke()
+
+        this.ctx.font = "15px Comic Sans MS";
+        this.ctx.fillStyle = "black";
+        this.ctx.textAlign = "center";
+        this.ctx.fillText("Célok száma", 685, 45);
+
+        this.ctx.font = "100px Comic Sans MS";
+        this.ctx.fillStyle = "red";
+        this.ctx.textAlign = "center";
+        this.ctx.fillText("1", 685, 130);
+
+
+    }
+
 
     drawBoard() {
         var bw = this._board_w
@@ -60,21 +96,21 @@ class Canvas {
     }
 
     drawParking() {
-        var bw = 90
-        var bh = 450
-        var p = 500
+        var bw = this.cell_w
+        var bh = this._board_w
+        var p = this._board_w + 50
         var cw = this.cell_w
         var ch = this.cell_w
 
         for (var x = 0; x <= bw; x += cw) {
-            this.ctx.moveTo(0.5 + x + p, 0)
-            this.ctx.lineTo(0.5 + x + p, bh)
+            this.ctx.moveTo(0.5 + x + p, this.table_p)
+            this.ctx.lineTo(0.5 + x + p, bh + this.table_p)
         }
 
 
         for (var y = 0; y <= bh; y += ch) {
-            this.ctx.moveTo(p, 0.5 + y)
-            this.ctx.lineTo(bw + p, 0.5 + y);
+            this.ctx.moveTo(p, 0.5 + y + this.table_p)
+            this.ctx.lineTo(bw + p, 0.5 + y + this.table_p);
         }
 
         this.ctx.strokeStyle = "black"
@@ -85,6 +121,7 @@ class Canvas {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawBoard()
         this.drawParking()
+        this.drawTargetNum()
 
         for (var block of this.blocks) {
             this.drawRotatedImage(block.get_img(), block.get_x(), block.get_y(), block.get_angle());
@@ -113,7 +150,7 @@ class Canvas {
         var free = this.getFreeParking()
 
         block.set_x(545)
-        block.set_y((free * 90) + 45)
+        block.set_y((free * 90) + 45 + this.table_p)
         this._parking[free] = false
     }
 
@@ -130,7 +167,7 @@ class Canvas {
     }
 
     getParkingID(block) {
-        return Math.round(block.get_y() / 45) - 1
+        return Math.round((block.get_y() - 45) / 90)
     }
 
     mouseDown(e) {
@@ -138,6 +175,7 @@ class Canvas {
 
         if (this.isInTheParking(this.blocks[this.moving_block_id])) {
             var parkingID = this.getParkingID(this.blocks[this.moving_block_id])
+            console.log("parkingID = " + parkingID);
             this._parking[parkingID] = true
         }
 
