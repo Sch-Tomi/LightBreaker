@@ -28,50 +28,15 @@ class Canvas {
         this._lock = new Image()
         this._lock.src = "img/lock.png"
 
-        // true - free | false - reserved
-        this._parking = [true, true, true, true, true]
+        this.hit_counter = new HitCounter(this.ctx, this.cell_w, this._board_w, this.table_p)
+        this.parking = new Parking(this.ctx, this.cell_w, this._board_w, this.table_p)
 
     }
 
     clear() {
         this.blocks = []
-        this._parking = [true, true, true, true, true]
+        this.parking.clear()
     }
-
-    drawTargetNum(){
-        var bw = this.cell_w
-        var bh = this.cell_w
-        var p = this._board_w + 190
-        var cw = this.cell_w
-        var ch = this.cell_w
-
-        for (var x = 0; x <= bw; x += cw) {
-            this.ctx.moveTo(0.5 + x + p, this.table_p + 45)
-            this.ctx.lineTo(0.5 + x + p, bh + this.table_p + 45)
-        }
-
-
-        for (var y = 0; y <= bh; y += ch) {
-            this.ctx.moveTo(p, 0.5 + y + this.table_p + 45)
-            this.ctx.lineTo(bw + p, 0.5 + y + this.table_p + 45);
-        }
-
-        this.ctx.strokeStyle = "black"
-        this.ctx.stroke()
-
-        this.ctx.font = "15px Comic Sans MS";
-        this.ctx.fillStyle = "black";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText("Célok száma", 685, 45);
-
-        this.ctx.font = "100px Comic Sans MS";
-        this.ctx.fillStyle = "red";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText("1", 685, 130);
-
-
-    }
-
 
     drawBoard() {
         var bw = this._board_w
@@ -95,33 +60,11 @@ class Canvas {
         this.ctx.stroke()
     }
 
-    drawParking() {
-        var bw = this.cell_w
-        var bh = this._board_w
-        var p = this._board_w + 50
-        var cw = this.cell_w
-        var ch = this.cell_w
-
-        for (var x = 0; x <= bw; x += cw) {
-            this.ctx.moveTo(0.5 + x + p, this.table_p)
-            this.ctx.lineTo(0.5 + x + p, bh + this.table_p)
-        }
-
-
-        for (var y = 0; y <= bh; y += ch) {
-            this.ctx.moveTo(p, 0.5 + y + this.table_p)
-            this.ctx.lineTo(bw + p, 0.5 + y + this.table_p);
-        }
-
-        this.ctx.strokeStyle = "black"
-        this.ctx.stroke()
-    }
-
     render() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawBoard()
-        this.drawParking()
-        this.drawTargetNum()
+        this.parking.render()
+        this.hit_counter.render()
 
         for (var block of this.blocks) {
             this.drawRotatedImage(block.get_img(), block.get_x(), block.get_y(), block.get_angle());
@@ -133,6 +76,11 @@ class Canvas {
 
     }
 
+    addParkingBlock(block) {
+        this.parking.parkingBlock(block)
+        this.blocks.push(block)
+    }
+
     addBlock(block) {
         var x = block.get_x() * this.cell_w + this.cell_wh + this.table_p
         var y = block.get_y() * this.cell_w + this.cell_wh + this.table_p
@@ -141,42 +89,12 @@ class Canvas {
         this.blocks.push(block)
     }
 
-    addParkingBlock(block) {
-        this.parkingBlock(block)
-        this.blocks.push(block)
-    }
-
-    parkingBlock(block) {
-        var free = this.getFreeParking()
-
-        block.set_x(545)
-        block.set_y((free * 90) + 45 + this.table_p)
-        this._parking[free] = false
-    }
-
-    getFreeParking() {
-        for (var i = 0; i < this._parking.length; i++) {
-            if (this._parking[i]) {
-                return i
-            }
-        }
-    }
-
-    isInTheParking(block) {
-        return block.get_x() > this._board_w
-    }
-
-    getParkingID(block) {
-        return Math.round((block.get_y() - 45) / 90)
-    }
-
     mouseDown(e) {
         this.searchBlock(e.clientX, e.clientY)
 
-        if (this.isInTheParking(this.blocks[this.moving_block_id])) {
-            var parkingID = this.getParkingID(this.blocks[this.moving_block_id])
-            console.log("parkingID = " + parkingID);
-            this._parking[parkingID] = true
+        if (this.parking.isInTheParking(this.blocks[this.moving_block_id])) {
+            var parkingID = this.parking.getParkingID(this.blocks[this.moving_block_id])
+            this.parking.setFreeParking(parkingID)
         }
 
         this.canvas.onmousemove = (e) => {
@@ -188,7 +106,7 @@ class Canvas {
         this.fitBlockToCell()
 
         if (this.blockCollision()) {
-            this.parkingBlock(this.blocks[this.moving_block_id])
+            this.parking.parkingBlock(this.blocks[this.moving_block_id])
         }
 
         this.canvas.onmousemove = null
@@ -233,14 +151,12 @@ class Canvas {
         var x = row * this.cell_wh
         var y = col * this.cell_wh
 
-
-
         if (x > this._board_w || y > this._board_w) {
-            this.parkingBlock(block)
+            this.parking.parkingBlock(block)
         } else {
             // between 2 cell
             if ((x - 45) % 90 > 0 || (y - 45) % 90 > 0) {
-                this.parkingBlock(block)
+                this.parking.parkingBlock(block)
             } else {
                 console.log("(" + x + ", " + y + ")");
                 block.set_x(x + this.table_p)
@@ -261,9 +177,7 @@ class Canvas {
         return false
     }
 
-
     //http://creativejs.com/2012/01/day-10-drawing-rotated-images-into-canvas/
-    // ELMOSÓDIK?!
     drawRotatedImage(image, x, y, angle) {
         var TO_RADIANS = Math.PI / 180;
         // save the current co-ordinate system
