@@ -15,7 +15,7 @@ class Game {
         this.selector.innerHTML += "<option value='2'>Level 2</option>"
         this.selector.innerHTML += "<option value='3'>Level 3</option>"
 
-        document.body.appendChild(this.selector)
+        document.body.querySelector("#lightBreaker-lvlSelector").appendChild(this.selector)
         this.selector.onchange = () => {
             this.levelSelect()
         }
@@ -37,11 +37,9 @@ class Game {
 
     levelSelect() {
         this.canvas.clear()
-        console.log(this.selector.options[this.selector.selectedIndex].value);
         switch (parseInt(this.selector.options[this.selector.selectedIndex].value)) {
             case 1:
                 this.level1()
-                console.log('asd');
                 break;
             case 2:
                 this.level2()

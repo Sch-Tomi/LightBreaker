@@ -4,7 +4,7 @@ class Canvas {
         this.ctx = this.canvas.getContext("2d")
         this.canvas.width = 780
         this.canvas.height = 460
-        document.body.appendChild(this.canvas);
+        document.querySelector("#lightBreaker").appendChild(this.canvas);
 
         this.blocks = []
         this.moving_block_id = null
@@ -90,7 +90,8 @@ class Canvas {
     }
 
     mouseDown(e) {
-        this.searchBlock(e.clientX, e.clientY)
+
+        this.searchBlock(this.getMousePos(e))
 
         if (this.parking.isInTheParking(this.blocks[this.moving_block_id])) {
             var parkingID = this.parking.getParkingID(this.blocks[this.moving_block_id])
@@ -115,14 +116,16 @@ class Canvas {
 
     mouseMove(e) {
         if (this.moving_block_id !== null) {
-            this.blocks[this.moving_block_id].set_x(e.clientX)
-            this.blocks[this.moving_block_id].set_y(e.clientY)
+            var pos = this.getMousePos(e)
+
+            this.blocks[this.moving_block_id].set_x(pos.x)
+            this.blocks[this.moving_block_id].set_y(pos.y)
         }
     }
 
     mouseClick(e) {
 
-        this.searchBlock(e.clientX, e.clientY)
+        this.searchBlock(this.getMousePos(e))
 
         if (e.shiftKey) {
             this.blocks[this.moving_block_id].rotate_right()
@@ -134,10 +137,19 @@ class Canvas {
 
     }
 
-    searchBlock(x, y) {
+    getMousePos(e) {
+        var rect = this.canvas.getBoundingClientRect();
+        return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+
+
+    searchBlock(pos) {
         for (var i = 0; i < this.blocks.length; i++) {
             var block = this.blocks[i]
-            if ((block.get_x() - 45 <= x && x <= block.get_x() + 45) && (block.get_y() - 45 <= y && y <= block.get_y() + 45)) {
+            if ((block.get_x() - 45 <= pos.x && pos.x <= block.get_x() + 45) && (block.get_y() - 45 <= pos.y && pos.y <= block.get_y() + 45)) {
                 this.moving_block_id = i
                 break
             }
@@ -158,7 +170,7 @@ class Canvas {
             if ((x - 45) % 90 > 0 || (y - 45) % 90 > 0) {
                 this.parking.parkingBlock(block)
             } else {
-                console.log("(" + x + ", " + y + ")");
+                //console.log("(" + x + ", " + y + ")");
                 block.set_x(x + this.table_p)
                 block.set_y(y + this.table_p)
             }
