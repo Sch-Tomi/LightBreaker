@@ -2,23 +2,13 @@ class Game {
     constructor() {
         this.canvas = new Canvas()
         this.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
-
+        this._placeInteface()
         document.body.oncontextmenu = () => {
             return false
         }
 
+        this._minHit = 0
 
-        this.selector = document.createElement("select")
-        this.selector.id = "lvlSelect"
-        this.selector.innerHTML += "<option disabled selected value> -- select an level -- </option>"
-        this.selector.innerHTML += "<option value='1'>Level 1</option>"
-        this.selector.innerHTML += "<option value='2'>Level 2</option>"
-        this.selector.innerHTML += "<option value='3'>Level 3</option>"
-
-        document.body.querySelector("#lightBreaker-lvlSelector").appendChild(this.selector)
-        this.selector.onchange = () => {
-            this.levelSelect()
-        }
     }
 
     main() {
@@ -33,6 +23,15 @@ class Game {
     run() {
         // Let's play this game!
         this.main();
+    }
+
+    fire(){
+        if(this.canvas.isParkingEmpty()){
+            //console.log(this.canvas.get_board());
+            var result = new Calculator(this.canvas.get_board(), this._minHit)
+            console.log(result)
+            //alert(result.valid)
+        }
     }
 
     levelSelect() {
@@ -52,10 +51,36 @@ class Game {
         }
     }
 
+    _placeInteface(){
+        this.selector = document.createElement("select")
+        this.selector.id = "lvlSelect"
+        this.selector.innerHTML += "<option disabled selected value> -- select a level -- </option>"
+        this.selector.innerHTML += "<option value='1'>Level 1</option>"
+        this.selector.innerHTML += "<option value='2'>Level 2</option>"
+        this.selector.innerHTML += "<option value='3'>Level 3</option>"
+
+        document.body.querySelector("#lightBreaker-lvlSelector").appendChild(this.selector)
+        this.selector.onchange = () => {
+            this.levelSelect()
+        }
+
+        this.fireButton = document.createElement('button')
+        this.fireButton.textContent = 'Fire!'
+        this.fireButton.className = 'fireBtn'
+        this.fireButton.id = "fireButton"
+
+        document.body.querySelector("#lightBreaker-fireButton").appendChild(this.fireButton)
+        this.fireButton.onclick = () => {
+            this.fire()
+        }
+    }
+
     level1() {
         this.canvas.addBlock(new Laser(180, 1, 1, false, false))
         this.canvas.addBlock(new Target(0, 3, 3, false, true))
         this.canvas.addParkingBlock(new DoubleMirror(0, 0, 0, true, true))
+
+        this._minHit = 1
     }
 
     level2() {
@@ -65,6 +90,8 @@ class Game {
 
         this.canvas.addParkingBlock(new Target(0, 0, 0, true, true))
         this.canvas.addParkingBlock(new HalfMirror(0, 0, 0, true, true))
+
+        this._minHit = 2
     }
 
     level3() {
@@ -78,6 +105,8 @@ class Game {
         this.canvas.addParkingBlock(new Mirror(0, 0, 0, true, true))
         this.canvas.addParkingBlock(new Mirror(0, 0, 0, true, true))
         this.canvas.addParkingBlock(new HalfMirror(0, 0, 0, true, true))
+
+        this._minHit = 2
     }
 
 }

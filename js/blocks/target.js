@@ -1,5 +1,13 @@
-class Target extends MasterBlock {
-  constructor(heading,x,y,moving,rotating) {
-    super("img/cel.png",heading,x,y,moving,rotating)
-  }
+class Target extends Mirror {
+    constructor(heading, x, y, moving, rotating) {
+        super(heading, x, y, moving, rotating, "img/cel.png")
+
+        this._hit = false
+
+    }
+
+    hitStatus() {
+        return this._hit
+    }
+
 }

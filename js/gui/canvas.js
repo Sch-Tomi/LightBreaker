@@ -24,6 +24,9 @@ class Canvas {
         this.cell_wh = this.cell_w / 2
         this.table_p = 5
 
+        this._board_row_num = this._board_w / this.cell_w
+        this._board_col_num = this._board_w / this.cell_w
+
 
         this._lock = new Image()
         this._lock.src = "img/lock.png"
@@ -67,7 +70,7 @@ class Canvas {
         this.hit_counter.render()
 
         for (var block of this.blocks) {
-            this.drawRotatedImage(block.get_img(), block.get_x(), block.get_y(), block.get_angle());
+            this.drawRotatedImage(block.get_img(), block.get_x(), block.get_y(), block.get_direction());
 
             if (block.locked()) {
                 this.drawLock(block)
@@ -79,6 +82,10 @@ class Canvas {
     addParkingBlock(block) {
         this.parking.parkingBlock(block)
         this.blocks.push(block)
+    }
+
+    isParkingEmpty() {
+        return this.parking.isEmpty()
     }
 
     addBlock(block) {
@@ -213,6 +220,30 @@ class Canvas {
 
     drawLock(block) {
         this.ctx.drawImage(this._lock, block.get_x() + 20, block.get_y() - 40)
+    }
+
+    get_board() {
+
+        //var matrix = Array(this._board_row_num).fill(Array(this._board_col_num).fill(null))
+
+        var matrix = []
+
+        for (var i = 0; i < this._board_row_num; i++) {
+            matrix[i] = []
+            for (var j = 0; j < this._board_col_num; j++) {
+                matrix[i][j] = null
+            }
+        }
+
+
+        for (var block of this.blocks) {
+            var x = block.get_x()
+            var y = block.get_y()
+
+            matrix[Math.floor((y - 45) / 90)][Math.floor((x - 45) / 90)] = block
+        }
+
+        return matrix
     }
 
 }

@@ -71,4 +71,10 @@ class Parking {
     getParkingID(block) {
         return Math.round((block.get_y() - 45) / 90)
     }
+
+    isEmpty() {
+        return this._parking.every((e, i, a) => {
+            return e
+        })
+    }
 }
