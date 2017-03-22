@@ -37,6 +37,11 @@ class Calculator {
                             if (newDir.length > 1) {
                                 for (var i = 1; i < newDir.length; i++) {
                                     paths.push(new Path())
+
+                                    for (var j = 0; j < paths[i].length - 1; j++) {
+                                      paths[paths.length - 1].push(null)
+                                    }
+
                                     paths[paths.length - 1].push(new Position(nextPos.row, nextPos.col, newDir[i]))
                                     paths_valid.push(true)
                                 }
