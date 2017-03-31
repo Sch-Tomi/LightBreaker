@@ -30,7 +30,9 @@ class Game {
             //console.log(this.canvas.get_board());
             var result = new Calculator(this.canvas.get_board(), this._minHit)
             console.log(result)
-            //alert(result.valid)
+            if(result.valid){
+              this.canvas.drawResult(result.paths)
+            }
         }
     }
 

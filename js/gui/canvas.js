@@ -34,6 +34,10 @@ class Canvas {
         this.hit_counter = new HitCounter(this.ctx, this.cell_w, this._board_w, this.table_p)
         this.parking = new Parking(this.ctx, this.cell_w, this._board_w, this.table_p)
 
+        this.solution = new LaserPath(this._board_w, this._board_w,5,5,this.table_p, this.cell_w, this.cell_w)
+        this.drawingsolution = false
+
+
     }
 
     clear() {
@@ -77,6 +81,10 @@ class Canvas {
             }
         }
 
+    }
+
+    drawResult(result){
+      this.solution.init(result)
     }
 
     addParkingBlock(block) {
