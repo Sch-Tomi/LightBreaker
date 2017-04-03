@@ -52,6 +52,8 @@ class Canvas {
         var cw = this.cell_w
         var ch = this.cell_w
 
+        this.ctx.beginPath()
+
         for (var x = 0; x <= bw; x += cw) {
             this.ctx.moveTo(0.5 + x + p, p)
             this.ctx.lineTo(0.5 + x + p, bh + p)
@@ -63,7 +65,6 @@ class Canvas {
             this.ctx.lineTo(bw + p, 0.5 + y + p);
         }
 
-        this.ctx.strokeStyle = "black"
         this.ctx.stroke()
     }
 
@@ -80,20 +81,30 @@ class Canvas {
                 this.drawLock(block)
             }
         }
+
         if(this.drawingsolution){
 
+            this.ctx.beginPath()
             let path = this.solution.next()
-            console.log(path);
-            // for (var i = 0; i < path.length - 1 ; i++) {
-            //     this.ctx.moveTo(path[i].col, path[i].row)
-            //     this.ctx.lineTo(path[i+1].col, path[i+1].row)
-            // }
+            // console.log(path);
+            for (var i = 0; i < path.length - 1 ; i++) {
+               this.ctx.moveTo(path[i].col, path[i].row)
+               this.ctx.lineTo(path[i+1].col, path[i+1].row)
+            }
 
             this.drawingsolution = this.solution.isRemainedStep()
 
+            this.ctx.lineWidth = 5
+            this.ctx.strokeStyle = "red"
+            this.ctx.stroke()
         }
 
+        this._ctxStrokeDefault()
+    }
 
+    _ctxStrokeDefault(){
+        this.ctx.lineWidth = 1
+        this.ctx.strokeStyle = "black"
     }
 
     drawResult(result){

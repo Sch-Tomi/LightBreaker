@@ -29,7 +29,7 @@ class MasterBlock {
         }
     }
 
-    get_y() {
+    get_y(){
         return this._y
     }
 
