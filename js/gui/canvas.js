@@ -80,11 +80,26 @@ class Canvas {
                 this.drawLock(block)
             }
         }
+        if(this.drawingsolution){
+
+            let path = this.solution.next()
+            console.log(path);
+            // for (var i = 0; i < path.length - 1 ; i++) {
+            //     this.ctx.moveTo(path[i].col, path[i].row)
+            //     this.ctx.lineTo(path[i+1].col, path[i+1].row)
+            // }
+
+            this.drawingsolution = this.solution.isRemainedStep()
+
+        }
+
 
     }
 
     drawResult(result){
       this.solution.init(result)
+
+      this.drawingsolution = true;
     }
 
     addParkingBlock(block) {
