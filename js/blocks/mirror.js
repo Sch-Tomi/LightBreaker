@@ -19,39 +19,51 @@ class Mirror extends MasterBlock {
         return myDir == dir;
     }
 
-    get_newDir(dir) {
+    get_newDir(laserDirection) {
 
         var myDir = this._direction % 180
-        dir = (dir + 180) % 360
-        console.log(myDir + " - " + dir);
+        laserDirection = (laserDirection + 180) % 360
 
         if (myDir == 0) {
-            if (dir == 0) {
-                return [90]
-            }
-            if (dir == 270) {
-                return [180]
-            }
-            if (dir == 90) {
-                return [0]
-            }
-            if (dir == 180) {
-                return [270]
-            }
+            return this._getNewDirectionWithNormalMirrorPosition(laserDirection)
         } else {
-            if (dir == 0) {
-                return [270]
-            }
-            if (dir == 270) {
-                return [0]
-            }
-            if (dir == 90) {
-                return [180]
-            }
-            if (dir == 180) {
-                return [90]
-            }
+            return this._getNewDirectionWithOpositeMirrorPosition(laserDirection)
         }
 
+    }
+
+
+    _getNewDirectionWithNormalMirrorPosition(direction){
+      switch (direction) {
+        case 0:
+          return [90]
+          break;
+        case 90:
+          return [0]
+          break
+        case 180:
+          retur [270]
+          break;
+        case 270:
+          return [180]
+          break;
+      }
+    }
+
+    _getNewDirectionWithOpositeMirrorPosition(direction){
+      switch (direction) {
+        case 0:
+          return [270]
+          break;
+        case 90:
+          return [180]
+          break
+        case 180:
+          return [90]
+          break;
+        case 270:
+          return [0]
+          break;
+      }
     }
 }

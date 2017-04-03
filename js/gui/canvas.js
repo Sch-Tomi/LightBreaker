@@ -1,80 +1,75 @@
 class Canvas {
     constructor() {
-        this.canvas = document.createElement("canvas")
-        this.ctx = this.canvas.getContext("2d")
-        this.canvas.width = 780
-        this.canvas.height = 460
-        document.querySelector("#lightBreaker").appendChild(this.canvas);
+        this._canvas = document.createElement("canvas")
+        this._context = this._canvas.getContext("2d")
+        this._canvas.width = 780
+        this._canvas.height = 460
+        document.querySelector("#lightBreaker").appendChild(this._canvas);
 
-        this.blocks = []
-        this.moving_block_id = null
+        this._blocks = []
+        this._movingBlockID = null
 
-        this.canvas.onmousedown = (e) => {
-            this.mouseDown(e)
-        }
-        this.canvas.onmouseup = (e) => {
-            this.mouseUp(e)
-        }
-        this.canvas.ondblclick = (e) => {
-            this.mouseClick(e)
-        }
+        this._boardWidth = 450
+        this._cellDimension = 90
+        this._cellDimensionHalf = this._cellDimension / 2
+        this._tablePadding = 5
 
-        this._board_w = 450
-        this.cell_w = 90
-        this.cell_wh = this.cell_w / 2
-        this.table_p = 5
-
-        this._board_row_num = this._board_w / this.cell_w
-        this._board_col_num = this._board_w / this.cell_w
+        this._board_row_num = this._boardWidth / this._cellDimension
+        this._board_col_num = this._boardWidth / this._cellDimension
 
 
         this._lock = new Image()
         this._lock.src = "img/lock.png"
 
-        this.hit_counter = new HitCounter(this.ctx, this.cell_w, this._board_w, this.table_p)
-        this.parking = new Parking(this.ctx, this.cell_w, this._board_w, this.table_p)
+        this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
+        this._parkingTable = new Parking(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
 
-        this.solution = new LaserPath(this._board_w, this._board_w,5,5,this.table_p, this.cell_w, this.cell_w)
-        this.drawingsolution = false
+        this._laserPathDrawer = new LaserPath(this._boardWidth, this._boardWidth,5,5,this._tablePadding, this._cellDimension, this._cellDimension)
+        this._drawingLaserIsInProgress = false
 
 
+    }
+
+    _connectMouseEvents(){
+      this._canvas.onmousedown = (e) => {
+          this.mouseDown(e)
+      }
+      this._canvas.onmouseup = (e) => {
+          this.mouseUp(e)
+      }
+      this._canvas.ondblclick = (e) => {
+          this.mouseClick(e)
+      }
     }
 
     clear() {
-        this.blocks = []
-        this.parking.clear()
+        this._blocks = []
+        this._parkingTable.clear()
     }
 
     drawBoard() {
-        var bw = this._board_w
-        var bh = this._board_w
-        var p = this.table_p
-        var cw = this.cell_w
-        var ch = this.cell_w
+        this._context.beginPath()
 
-        this.ctx.beginPath()
-
-        for (var x = 0; x <= bw; x += cw) {
-            this.ctx.moveTo(0.5 + x + p, p)
-            this.ctx.lineTo(0.5 + x + p, bh + p)
+        for (var x = 0; x <= this._boardWidth; x += this._cellDimension) {
+            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
+            this._context.lineTo(0.5 + x + this._tablePadding, this._boardWidth + this._tablePadding)
         }
 
-
-        for (var y = 0; y <= bh; y += ch) {
-            this.ctx.moveTo(p, 0.5 + y + p)
-            this.ctx.lineTo(bw + p, 0.5 + y + p);
+        for (var y = 0; y <= this._boardWidth; y += this._cellDimension) {
+            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
+            this._context.lineTo(this._boardWidth + this._tablePadding, 0.5 + y + this._tablePadding);
         }
 
-        this.ctx.stroke()
+        this._context.stroke()
     }
 
     render() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
         this.drawBoard()
-        this.parking.render()
-        this.hit_counter.render()
+        this._parkingTable.render()
+        this._hitCounter.render()
 
-        for (var block of this.blocks) {
+        for (var block of this._blocks) {
             this.drawRotatedImage(block.get_img(), block.get_x(), block.get_y(), block.get_direction());
 
             if (block.locked()) {
@@ -82,64 +77,64 @@ class Canvas {
             }
         }
 
-        if(this.drawingsolution){
+        if(this._drawingLaserIsInProgress){
 
-            this.ctx.beginPath()
-            let path = this.solution.next()
+            this._context.beginPath()
+            let path = this._laserPathDrawer.next()
             // console.log(path);
             for (var i = 0; i < path.length - 1 ; i++) {
-               this.ctx.moveTo(path[i].col, path[i].row)
-               this.ctx.lineTo(path[i+1].col, path[i+1].row)
+               this._context.moveTo(path[i].col, path[i].row)
+               this._context.lineTo(path[i+1].col, path[i+1].row)
             }
 
-            this.drawingsolution = this.solution.isRemainedStep()
+            this._drawingLaserIsInProgress = this._laserPathDrawer.isRemainedStep()
 
-            this.ctx.lineWidth = 5
-            this.ctx.strokeStyle = "red"
-            this.ctx.stroke()
+            this._context.lineWidth = 5
+            this._context.strokeStyle = "red"
+            this._context.stroke()
         }
 
         this._ctxStrokeDefault()
     }
 
     _ctxStrokeDefault(){
-        this.ctx.lineWidth = 1
-        this.ctx.strokeStyle = "black"
+        this._context.lineWidth = 1
+        this._context.strokeStyle = "black"
     }
 
     drawResult(result){
-      this.solution.init(result)
+      this._laserPathDrawer.init(result)
 
-      this.drawingsolution = true;
+      this._drawingLaserIsInProgress = true;
     }
 
     addParkingBlock(block) {
-        this.parking.parkingBlock(block)
-        this.blocks.push(block)
+        this._parkingTable.parkingBlock(block)
+        this._blocks.push(block)
     }
 
     isParkingEmpty() {
-        return this.parking.isEmpty()
+        return this._parkingTable.isEmpty()
     }
 
     addBlock(block) {
-        var x = block.get_x() * this.cell_w + this.cell_wh + this.table_p
-        var y = block.get_y() * this.cell_w + this.cell_wh + this.table_p
+        var x = block.get_x() * this._cellDimension + this._cellDimensionHalf + this._tablePadding
+        var y = block.get_y() * this._cellDimension + this._cellDimensionHalf + this._tablePadding
 
         block.canvas_repositioning(x, y)
-        this.blocks.push(block)
+        this._blocks.push(block)
     }
 
     mouseDown(e) {
 
         this.searchBlock(this.getMousePos(e))
 
-        if (this.parking.isInTheParking(this.blocks[this.moving_block_id])) {
-            var parkingID = this.parking.getParkingID(this.blocks[this.moving_block_id])
-            this.parking.setFreeParking(parkingID)
+        if (this._parkingTable.isInTheParking(this._blocks[this._movingBlockID])) {
+            var parkingID = this._parkingTable.getParkingID(this._blocks[this._movingBlockID])
+            this._parkingTable.setFreeParking(parkingID)
         }
 
-        this.canvas.onmousemove = (e) => {
+        this._canvas.onmousemove = (e) => {
             this.mouseMove(e)
         }
     }
@@ -148,19 +143,19 @@ class Canvas {
         this.fitBlockToCell()
 
         if (this.blockCollision()) {
-            this.parking.parkingBlock(this.blocks[this.moving_block_id])
+            this._parkingTable.parkingBlock(this._blocks[this._movingBlockID])
         }
 
-        this.canvas.onmousemove = null
-        this.moving_block_id = null
+        this._canvas.onmousemove = null
+        this._movingBlockID = null
     }
 
     mouseMove(e) {
-        if (this.moving_block_id !== null) {
+        if (this._movingBlockID !== null) {
             var pos = this.getMousePos(e)
 
-            this.blocks[this.moving_block_id].set_x(pos.x)
-            this.blocks[this.moving_block_id].set_y(pos.y)
+            this._blocks[this._movingBlockID].set_x(pos.x)
+            this._blocks[this._movingBlockID].set_y(pos.y)
         }
     }
 
@@ -169,17 +164,17 @@ class Canvas {
         this.searchBlock(this.getMousePos(e))
 
         if (e.shiftKey) {
-            this.blocks[this.moving_block_id].rotate_right()
+            this._blocks[this._movingBlockID].rotate_right()
         } else {
-            this.blocks[this.moving_block_id].rotate_left()
+            this._blocks[this._movingBlockID].rotate_left()
         }
 
-        this.moving_block_id = null
+        this._movingBlockID = null
 
     }
 
     getMousePos(e) {
-        var rect = this.canvas.getBoundingClientRect();
+        var rect = this._canvas.getBoundingClientRect();
         return {
             x: e.clientX - rect.left,
             y: e.clientY - rect.top
@@ -188,41 +183,41 @@ class Canvas {
 
 
     searchBlock(pos) {
-        for (var i = 0; i < this.blocks.length; i++) {
-            var block = this.blocks[i]
+        for (var i = 0; i < this._blocks.length; i++) {
+            var block = this._blocks[i]
             if ((block.get_x() - 45 <= pos.x && pos.x <= block.get_x() + 45) && (block.get_y() - 45 <= pos.y && pos.y <= block.get_y() + 45)) {
-                this.moving_block_id = i
+                this._movingBlockID = i
                 break
             }
         }
     }
 
     fitBlockToCell() {
-        var block = this.blocks[this.moving_block_id]
-        var row = Math.round(block.get_x() / this.cell_wh)
-        var col = Math.round(block.get_y() / this.cell_wh)
-        var x = row * this.cell_wh
-        var y = col * this.cell_wh
+        var block = this._blocks[this._movingBlockID]
+        var row = Math.round(block.get_x() / this._cellDimensionHalf)
+        var col = Math.round(block.get_y() / this._cellDimensionHalf)
+        var x = row * this._cellDimensionHalf
+        var y = col * this._cellDimensionHalf
 
-        if (x > this._board_w || y > this._board_w) {
-            this.parking.parkingBlock(block)
+        if (x > this._boardWidth || y > this._boardWidth) {
+            this._parkingTable.parkingBlock(block)
         } else {
             // between 2 cell
             if ((x - 45) % 90 > 0 || (y - 45) % 90 > 0) {
-                this.parking.parkingBlock(block)
+                this._parkingTable.parkingBlock(block)
             } else {
                 //console.log("(" + x + ", " + y + ")");
-                block.set_x(x + this.table_p)
-                block.set_y(y + this.table_p)
+                block.set_x(x + this._tablePadding)
+                block.set_y(y + this._tablePadding)
             }
 
         }
     }
 
     blockCollision() {
-        for (var i = 0; i < this.blocks.length; i++) {
-            if (i != this.moving_block_id) {
-                if (this.blocks[i].get_x() == this.blocks[this.moving_block_id].get_x() && this.blocks[i].get_y() == this.blocks[this.moving_block_id].get_y()) {
+        for (var i = 0; i < this._blocks.length; i++) {
+            if (i != this._movingBlockID) {
+                if (this._blocks[i].get_x() == this._blocks[this._movingBlockID].get_x() && this._blocks[i].get_y() == this._blocks[this._movingBlockID].get_y()) {
                     return true
                 }
             }
@@ -235,25 +230,25 @@ class Canvas {
         var TO_RADIANS = Math.PI / 180;
         // save the current co-ordinate system
         // before we screw with it
-        this.ctx.save();
+        this._context.save();
 
         // move to the middle of where we want to draw our image
-        this.ctx.translate(x, y);
+        this._context.translate(x, y);
 
         // rotate around that point, converting our
         // angle from degrees to radians
-        this.ctx.rotate(angle * TO_RADIANS);
+        this._context.rotate(angle * TO_RADIANS);
 
         // draw it up and to the left by half the width
         // and height of the image
-        this.ctx.drawImage(image, -(Math.round(image.width / 2)), -(Math.round(image.height / 2)));
+        this._context.drawImage(image, -(Math.round(image.width / 2)), -(Math.round(image.height / 2)));
 
         // and restore the co-ords to how they were when we began
-        this.ctx.restore();
+        this._context.restore();
     }
 
     drawLock(block) {
-        this.ctx.drawImage(this._lock, block.get_x() + 20, block.get_y() - 40)
+        this._context.drawImage(this._lock, block.get_x() + 20, block.get_y() - 40)
     }
 
     get_board() {
@@ -270,7 +265,7 @@ class Canvas {
         }
 
 
-        for (var block of this.blocks) {
+        for (var block of this._blocks) {
             var x = block.get_x()
             var y = block.get_y()
 

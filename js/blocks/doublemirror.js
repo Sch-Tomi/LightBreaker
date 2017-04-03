@@ -3,39 +3,52 @@ class DoubleMirror extends MasterBlock {
         super("img/dupla.png", heading, x, y, moving, rotating)
     }
 
-    get_newDir(dir) {
+    get_newDir(laserDirection) {
         //console.log(dir);
-        var myDir = this._direction % 180
-        dir = (dir + 180) % 360
+        var myDirection = this._direction % 180
+        laserDirection = (laserDirection + 180) % 360
         //console.log(myDir + " - " + dir);
 
-        if (myDir == 0) {
-            if (dir == 0) {
-                return [270]
-            }
-            if (dir == 270) {
-                return [0]
-            }
-            if (dir == 90) {
-                return [180]
-            }
-            if (dir == 180) {
-                return [90]
-            }
+        if (myDirection == 0) {
+          return this._getNewDirectionWithNormalMirrorPosition(laserDirection)
         } else {
-            if (dir == 0) {
-                return [90]
-            }
-            if (dir == 270) {
-                return [180]
-            }
-            if (dir == 90) {
-                return [0]
-            }
-            if (dir == 180) {
-                return [270]
-            }
+          return this._getNewDirectionWithOpositeMirrorPosition(laserDirection)
         }
 
+    }
+
+
+    _getNewDirectionWithNormalMirrorPosition(direction){
+      switch (direction) {
+        case 0:
+          return [270]
+          break;
+        case 90:
+          return [180]
+          break
+        case 180:
+          return [90]
+          break;
+        case 270:
+          return [0]
+          break;
+      }
+    }
+
+    _getNewDirectionWithOpositeMirrorPosition(direction){
+      switch (direction) {
+        case 0:
+          return [90]
+          break;
+        case 90:
+          return [0]
+          break
+        case 180:
+          return [270]
+          break;
+        case 270:
+          return [180]
+          break;
+      }
     }
 }
