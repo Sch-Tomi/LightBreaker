@@ -18,14 +18,14 @@ class Parking {
       let padding = this._boardDimension + 50
 
       for (var x = 0; x <= this._cellDimension; x += this._cellDimension) {
-          this._context.moveTo(0.5 + x + padding, padding)
-          this._context.lineTo(0.5 + x + padding, this._boardDimension + padding)
+          this._context.moveTo(0.5 + x + padding, this._tablePadding)
+          this._context.lineTo(0.5 + x + padding, this._boardDimension + this._tablePadding)
       }
 
 
       for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
-          this._context.moveTo(padding, 0.5 + y + padding)
-          this._context.lineTo(this._cellDimension + padding, 0.5 + y + padding);
+          this._context.moveTo(padding, 0.5 + y + this._tablePadding)
+          this._context.lineTo(this._cellDimension + padding, 0.5 + y + this._tablePadding);
       }
 
       this._context.strokeStyle = "black"
@@ -37,19 +37,11 @@ class Parking {
     }
 
     parkingBlock(block) {
-        var free = this.getFreeParking()
+        var freeID = this._getFreeParking()
 
         block.set_x(545)
-        block.set_y((free * 90) + 45 + this._tablePadding)
-        this._parking[free] = false
-    }
-
-    getFreeParking() {
-        for (var i = 0; i < this._parking.length; i++) {
-            if (this._parking[i]) {
-                return i
-            }
-        }
+        block.set_y((freeID * 90) + 45 + this._tablePadding)
+        this._parking[freeID] = false
     }
 
     setFreeParking(id) {
@@ -65,8 +57,17 @@ class Parking {
     }
 
     isEmpty() {
-        return this._parking.every((e, i, a) => {
-            return e
+        return this._parking.every((element, index, array) => {
+            return element
         })
     }
+
+    _getFreeParking() {
+        for (var i = 0; i < this._parking.length; i++) {
+            if (this._parking[i]) {
+                return i
+            }
+        }
+    }
+
 }

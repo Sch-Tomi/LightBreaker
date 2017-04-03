@@ -1,4 +1,4 @@
-class LaserPath {
+class LaserPathDrawing {
 
     constructor(table_width, table_height, table_row_num, table_col_num, table_padding, cell_w, cell_h) {
 
