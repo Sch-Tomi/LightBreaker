@@ -256,19 +256,21 @@ class Canvas {
     }
 
     _drawLaser() {
-        this._context.beginPath()
-        let path = this._laserPathDrawing.next()
 
-        for (var i = 0; i < path.length - 1; i++) {
-            this._context.moveTo(path[i].col, path[i].row)
-            this._context.lineTo(path[i + 1].col, path[i + 1].row)
+        let paths = this._laserPathDrawing.next()
+        for (let path of paths) {
+            this._context.beginPath()
+            for (var i = 0; i < path.length - 1; i++) {
+                this._context.moveTo(path[i].col, path[i].row)
+                this._context.lineTo(path[i + 1].col, path[i + 1].row)
+            }
+
+            this._drawingLaserIsInProgress = this._laserPathDrawing.isRemainedStep()
+
+            this._context.lineWidth = 5
+            this._context.strokeStyle = "red"
+            this._context.stroke()
         }
-
-        this._drawingLaserIsInProgress = this._laserPathDrawing.isRemainedStep()
-
-        this._context.lineWidth = 5
-        this._context.strokeStyle = "red"
-        this._context.stroke()
     }
 
     _contextStrokeDefault() {

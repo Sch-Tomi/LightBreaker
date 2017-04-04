@@ -35,14 +35,14 @@ class LaserPathCalculator {
                             paths[i].push(new Position(nextPos.row, nextPos.col, newDir[0]))
 
                             if (newDir.length > 1) {
-                                for (var i = 1; i < newDir.length; i++) {
+                                for (var newDirI = 1; newDirI < newDir.length; newDirI++) {
                                     paths.push(new Path())
 
                                     for (var j = 0; j < paths[i].length - 1; j++) {
-                                      paths[paths.length - 1].push(null)
+                                        paths[paths.length - 1].push(paths[paths.length - 1][j])
                                     }
 
-                                    paths[paths.length - 1].push(new Position(nextPos.row, nextPos.col, newDir[i]))
+                                    paths[paths.length - 1].push(new Position(nextPos.row, nextPos.col, newDir[newDirI]))
                                     paths_valid.push(true)
                                 }
                             }

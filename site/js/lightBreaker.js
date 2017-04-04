@@ -86,120 +86,131 @@ class LaserPathDrawing {
         this._cell_w = parseInt(cell_w)
         this._cell_h = parseInt(cell_h)
 
-        this.startPos = null
-        this.endPos = null
+        this.startPositions = null
+        this.endPositions = null
 
-        this.startXY = null
-        this.endXY = null
-        this.breakPoint = null
+        this.startCoords = null
+        this.endCoords = null
+        this.breakPoints = null
 
-        this.solution = null
-        this.solutionStepPointer = 0
+        this.solutions = null
+        this.solutionsStepPointer = 0
 
 
     }
 
     init(solution) {
 
-        this.solution = solution[0]._path
-        this.solutionStepPointer = 0
+        this.startPositions = []
+        this.endPositions = []
 
+        this.startCoords = []
+        this.endCoords = []
+        this.breakPoints = []
 
-        this.startPos = solution[0]._path[0]
-        this.endPos = solution[0]._path[0]
+        this.solutions = solution
+        this.solutionsStepPointer = []
 
-        // console.log("SPOS: ");
-        // console.log(this.startPos);
-        // console.log("EPOS: ");
-        // console.log(this.endPos);
+        for (let solution of this.solutions) {
 
-        if (this.startPos.direction == 0) {
-            this.startXY = new Position(this._intToCoord(this.startPos.row), this._intToCoord(this.startPos.col) , 0)
-            this.endXY = new Position(this._intToCoord(this.endPos.row) - 40, this._intToCoord(this.endPos.col) , 0)
-        } else if (this.startPos.direction == 180) {
-            this.startXY = new Position(this._intToCoord(this.startPos.row),this._intToCoord(this.startPos.col), 180)
-            this.endXY = new Position(this._intToCoord(this.endPos.row) + 40, this._intToCoord(this.endPos.col), 180)
-        } else if (this.startPos.direction == 90) {
-            this.startXY = new Position(this._intToCoord(this.startPos.row),this._intToCoord(this.startPos.col), 90)
-            this.endXY = new Position(this._intToCoord(this.endPos.row), this._intToCoord(this.endPos.col) + 40, 90)
-        } else if (this.startPos.direction == 270) {
-            this.startXY = new Position(this._intToCoord(this.startPos.row),this._intToCoord(this.startPos.col), 270)
-            this.endXY = new Position(this._intToCoord(this.endPos.row), this._intToCoord(this.endPos.col) - 40, 270)
+            this.solutionsStepPointer.push(0)
+
+            this.startPositions.push(solution.get_path()[0])
+            this.endPositions.push(solution.get_path()[0])
+
+            this.breakPoints.push(null)
+            switch (this.startPositions[this.startPositions.length - 1].direction) {
+                case 0:
+                    this.startCoords.push(new Position(this._intToCoord(this.startPositions[this.startPositions.length - 1].row), this._intToCoord(this.startPositions[this.startPositions.length - 1].col), 0))
+                    this.endCoords.push(new Position(this._intToCoord(this.endPositions[this.endPositions.length - 1].row) - 40, this._intToCoord(this.endPositions[this.endPositions.length - 1].col), 0))
+                    break;
+                case 90:
+                    this.startCoords.push(new Position(this._intToCoord(this.startPositions[this.startPositions.length - 1].row), this._intToCoord(this.startPositions[this.startPositions.length - 1].col), 90))
+                    this.endCoords.push(new Position(this._intToCoord(this.endPositions[this.endPositions.length - 1].row), this._intToCoord(this.endPositions[this.endPositions.length - 1].col) + 40, 90))
+                    break;
+                case 180:
+                    this.startCoords.push(new Position(this._intToCoord(this.startPositions[this.startPositions.length - 1].row), this._intToCoord(this.startPositions[this.startPositions.length - 1].col), 180))
+                    this.endCoords.push(new Position(this._intToCoord(this.endPositions[this.endPositions.length - 1].row) + 40, this._intToCoord(this.endPositions[this.endPositions.length - 1].col), 180))
+                    break;
+                case 270:
+                    this.startCoords.push(new Position(this._intToCoord(this.startPositions[this.startPositions.length - 1].row), this._intToCoord(this.startPositions[this.startPositions.length - 1].col), 270))
+                    this.endCoords.push(new Position(this._intToCoord(this.endPositions[this.endPositions.length - 1].row), this._intToCoord(this.endPositions[this.endPositions.length - 1].col) - 40, 270))
+                    break;
+
+            }
         }
-
-        // console.log("SXY: ")
-        // console.log( this.startXY);
-        // console.log("EXY: ")
-        // console.log( this.endXY);
-        //
-        // console.log("try:"+ this._coordToInt(this.endXY.row));
-
-        return [this.startXY, this.endXY]
-
     }
-
+    // TODO:  MIVAN HA NULL a startpos[i]
     next() {
 
-        this._stepOne(this.startXY)
-        this._stepOne(this.endXY)
+        let laserPaths = []
 
-        this._checkChangeDir()
+        for (var i = 0; i < this.startCoords.length; i++) {
+            this._stepOne(this.startCoords[i])
+            this._stepOne(this.endCoords[i])
 
-        if (this.breakPoint != null) {
-            return [this.startXY, this.breakPoint, this.endXY]
-        } else {
-            return [this.startXY, this.endXY]
+            this._checkChangeDir(i)
+
+            if (this.breakPoints[i] != null) {
+                laserPaths.push([this.startCoords[i], this.breakPoints[i], this.endCoords[i]])
+            } else {
+                laserPaths.push([this.startCoords[i], this.endCoords[i]])
+            }
         }
-
+        return laserPaths
     }
 
     isRemainedStep() {
 
-        if (this.startXY.row < 0 || this.startXY.row > 500 || this.startXY.col < 0 || this.startXY.col > 500){
-          this._clearBreakPoint()
-          return false
+        if (this.startCoords.some((element, index, array) => {
+                return element.row < 0 || element.row > 500 || element.col < 0 || element.col > 500
+            })) {
+            return true
         }
 
-        if(!(this.solutionStepPointer < this.solution.length)){
-          this._clearBreakPoint()
-        }
+        // if (!(this.solutionsStepPointer < this.solution.length)) {
+        //     this._clearBreakPoint()
+        // }
 
-        return this.solutionStepPointer < this.solution.length
+        return this.solutionsStepPointer.some((element, index, array)=>{return this._checkValidsolutionStepPointer(element, index, array)})
     }
 
+    _checkValidsolutionStepPointer(element, index, array){
+        return element.length < this.solutions[index].length
+    }
 
-    _checkChangeDir() {
+    _checkChangeDir(solutionPointer) {
         // console.log("Dir: " + this.solutionStepPointer);
-        if (this._isPosMiddleOfCell(this.endXY.row) && this._isPosMiddleOfCell(this.endXY.col)) {
+        if (this._isPosMiddleOfCell(this.endCoords[solutionPointer].row) && this._isPosMiddleOfCell(this.endCoords[solutionPointer].col)) {
 
-            if(this.solution.length - 1 > this.solutionStepPointer){
-                this.solutionStepPointer++
+            if (this.solutions[solutionPointer].get_path().length - 1 > this.solutionStepPointer[solutionPointer]) {
+                this.solutionStepPointer[solutionPointer]++
             }
 
-            this.endPos = this.solution[this.solutionStepPointer]
-            this.endXY.direction = this.endPos.direction
-            this._checkForBreakPoint()
+            this.endPositions[solutionPointer] = this.solutions[solutionPointer][this.solutionStepPointer]
+            this.endCoords[solutionPointer].direction = this.endPositions[solutionPointer].direction
+            this._checkForBreakPoint(solutionPointer)
         }
 
-        if (this._isPosMiddleOfCell(this.startXY.row) && this._isPosMiddleOfCell(this.startXY.col)) {
-            this.startPos = this.solution[this.solutionStepPointer]
-            this.startXY.direction = this.startPos.direction
-            this._clearBreakPoint()
-        }
-    }
-
-    _checkForBreakPoint() {
-
-        if (this.solution[this.solutionStepPointer - 1].direction != this.solution[this.solutionStepPointer]) {
-            this.breakPoint = new Position(this._intToCoord(this.solution[this.solutionStepPointer].row),
-                this._intToCoord(this.solution[this.solutionStepPointer].col),
-                this.solution[this.solutionStepPointer].direction)
-
+        if (this._isPosMiddleOfCell(this.startCoords[solutionPointer].row) && this._isPosMiddleOfCell(this.startCoords[solutionPointer].col)) {
+            this.startPositions[solutionPointer] = this.solutions[solutionPointer][this.solutionStepPointer]
+            this.startCoords[solutionPointer].direction = this.startPositions[solutionPointer].direction
+            this._clearBreakPoint(solutionPointer)
         }
     }
 
-    _clearBreakPoint() {
-        this.breakPoint = null
+    _checkForBreakPoint(solutionPointer) {
+
+        if (this.solutions[solutionPointer].get_path()[this.solutionsStepPointer - 1].direction != this.solutions[solutionPointer].get_path()[this.solutionStepPointer]) {
+            this.breakPoints[solutionPointer] = new Position(this._intToCoord(this.solutions[solutionPointer].get_path()[this.solutionStepPointer].row),
+                this._intToCoord(this.solutions[solutionPointer].get_path()[this.solutionStepPointer].col),
+                this.solutions[solutionPointer].get_path()[this.solutionStepPointer].direction)
+
+        }
+    }
+
+    _clearBreakPoint(solutionPointer) {
+        this.breakPoints[solutionPointer] = null
     }
 
 
@@ -220,16 +231,16 @@ class LaserPathDrawing {
         }
     }
 
-    _intToCoord(integer){
+    _intToCoord(integer) {
         return integer * this._cell_w + this._cell_w / 2 + this._t_padding
     }
 
-    _coordToInt(coord){
-      return (coord - this._t_padding - (this._cell_w / 2)) % this._cell_w
+    _coordToInt(coord) {
+        return (coord - this._t_padding - (this._cell_w / 2)) % this._cell_w
     }
 
-    _isPosMiddleOfCell(pos){
-      return this._coordToInt(pos) == 0
+    _isPosMiddleOfCell(pos) {
+        return this._coordToInt(pos) == 0
     }
 
 }
@@ -493,19 +504,21 @@ class Canvas {
     }
 
     _drawLaser() {
-        this._context.beginPath()
-        let path = this._laserPathDrawing.next()
 
-        for (var i = 0; i < path.length - 1; i++) {
-            this._context.moveTo(path[i].col, path[i].row)
-            this._context.lineTo(path[i + 1].col, path[i + 1].row)
+        let paths = this._laserPathDrawing.next()
+        for (let path of paths) {
+            this._context.beginPath()
+            for (var i = 0; i < path.length - 1; i++) {
+                this._context.moveTo(path[i].col, path[i].row)
+                this._context.lineTo(path[i + 1].col, path[i + 1].row)
+            }
+
+            this._drawingLaserIsInProgress = this._laserPathDrawing.isRemainedStep()
+
+            this._context.lineWidth = 5
+            this._context.strokeStyle = "red"
+            this._context.stroke()
         }
-
-        this._drawingLaserIsInProgress = this._laserPathDrawing.isRemainedStep()
-
-        this._context.lineWidth = 5
-        this._context.strokeStyle = "red"
-        this._context.stroke()
     }
 
     _contextStrokeDefault() {
@@ -629,14 +642,14 @@ class LaserPathCalculator {
                             paths[i].push(new Position(nextPos.row, nextPos.col, newDir[0]))
 
                             if (newDir.length > 1) {
-                                for (var i = 1; i < newDir.length; i++) {
+                                for (var newDirI = 1; newDirI < newDir.length; newDirI++) {
                                     paths.push(new Path())
 
                                     for (var j = 0; j < paths[i].length - 1; j++) {
-                                      paths[paths.length - 1].push(null)
+                                        paths[paths.length - 1].push(paths[paths.length - 1][j])
                                     }
 
-                                    paths[paths.length - 1].push(new Position(nextPos.row, nextPos.col, newDir[i]))
+                                    paths[paths.length - 1].push(new Position(nextPos.row, nextPos.col, newDir[newDirI]))
                                     paths_valid.push(true)
                                 }
                             }
@@ -737,6 +750,10 @@ class Path {
 
     push(element) {
         this._path.push(element)
+    }
+
+    get length(){
+        return this._path.length
     }
 
     get_last() {
@@ -852,9 +869,10 @@ class Game {
     _fire(){
         if(this.canvas.isParkingEmpty()){
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
-            if(result.valid){
-              this.canvas.drawResult(result.paths)
-            }
+            this.canvas.drawResult(result.paths)
+            // if(result.valid){
+            //
+            // }
         }
     }
 
