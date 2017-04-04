@@ -1,46 +1,43 @@
 class HitCounter {
-    constructor(ctx, cell_w, board_w,table_p) {
-        this.ctx = ctx
-        this.cell_w = cell_w
-        this._board_w = board_w
-        this.table_p = table_p
+    constructor(context, cellDimension, boardDimension, tablePadding) {
+        this._context = context
+        this._cellDimension = cellDimension
+        this._boardDimension = boardDimension
+        this._tablePadding = tablePadding
+
+        this._limit = ""
     }
 
-    render(){
-        this.drawHitCounter()
-    }
+    render() {
 
-    drawHitCounter() {
-        var bw = this.cell_w
-        var bh = this.cell_w
-        var p  = this._board_w + 190
-        var cw = this.cell_w
-        var ch = this.cell_w
+        let padding = this._boardDimension + 190
 
-        for (var x = 0; x <= bw; x += cw) {
-            this.ctx.moveTo(0.5 + x + p, this.table_p + 45)
-            this.ctx.lineTo(0.5 + x + p, bh + this.table_p + 45)
+        for (var x = 0; x <= this._cellDimension; x += this._cellDimension) {
+            this._context.moveTo(0.5 + x + padding, this._tablePadding + 45)
+            this._context.lineTo(0.5 + x + padding, this._cellDimension + this._tablePadding + 45)
         }
 
 
-        for (var y = 0; y <= bh; y += ch) {
-            this.ctx.moveTo(p, 0.5 + y + this.table_p + 45)
-            this.ctx.lineTo(bw + p, 0.5 + y + this.table_p + 45);
+        for (var y = 0; y <= this._cellDimension; y += this._cellDimension) {
+            this._context.moveTo(padding, 0.5 + y + this._tablePadding + 45)
+            this._context.lineTo(this._cellDimension + padding, 0.5 + y + this._tablePadding + 45);
         }
 
-        this.ctx.strokeStyle = "black"
-        this.ctx.stroke()
+        this._context.strokeStyle = "black"
+        this._context.stroke()
 
-        this.ctx.font = "15px Comic Sans MS";
-        this.ctx.fillStyle = "black";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText("Célok száma", 685, 45);
+        this._context.font = "15px Comic Sans MS";
+        this._context.fillStyle = "black";
+        this._context.textAlign = "center";
+        this._context.fillText("Célok száma", 685, 45);
 
-        this.ctx.font = "100px Comic Sans MS";
-        this.ctx.fillStyle = "red";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText("1", 685, 130);
+        this._context.font = "100px Comic Sans MS";
+        this._context.fillStyle = "red";
+        this._context.textAlign = "center";
+        this._context.fillText(this._limit, 685, 130);
+    }
 
-
+    setCounter(newLimit){
+        this._limit = newLimit
     }
 }

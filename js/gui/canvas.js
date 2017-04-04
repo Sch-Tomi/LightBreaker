@@ -1,10 +1,6 @@
 class Canvas {
     constructor() {
-        this._canvas = document.createElement("canvas")
-        this._context = this._canvas.getContext("2d")
-        this._canvas.width = 780
-        this._canvas.height = 460
-        document.querySelector("#lightBreaker").appendChild(this._canvas);
+        this._createCanvas()
 
         this._blocks = []
         this._movingBlockID = null
@@ -99,7 +95,18 @@ class Canvas {
         return matrix
     }
 
+    setLimit(newLimit){
+        this._hitCounter.setCounter(newLimit)
+    }
     ///* PRIVATES
+
+    _createCanvas(){
+        this._canvas = document.createElement("canvas")
+        this._context = this._canvas.getContext("2d")
+        this._canvas.width = 780
+        this._canvas.height = 460
+        document.querySelector("#lightBreaker").appendChild(this._canvas);
+    }
 
     _connectMouseEvents(){
       this._canvas.onmousedown = (e) => {
@@ -268,4 +275,6 @@ class Canvas {
         this._context.lineWidth = 1
         this._context.strokeStyle = "black"
     }
+
+
 }

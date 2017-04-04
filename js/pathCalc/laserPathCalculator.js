@@ -1,4 +1,4 @@
-class Calculator {
+class LaserPathCalculator {
     constructor(gameboard, minHit) {
         // 5x5
         this._board = gameboard
