@@ -75,16 +75,14 @@ class Parking {
 
 class LaserPathDrawing {
 
-    constructor(table_width, table_height, table_row_num, table_col_num, table_padding, cell_w, cell_h) {
+    constructor(table_dimension, table_row_num, table_col_num, table_padding, cell_dimension) {
 
-        this._t_width = parseInt(table_width)
-        this._t_height = parseInt(table_height)
-        this._t_row_n = parseInt(table_row_num)
-        this._t_col_n = parseInt(table_col_num)
-        this._t_padding = parseInt(table_padding)
+        this._tableDimension = parseInt(table_dimension)
+        this._tableRowNum = parseInt(table_row_num)
+        this._tableColNum = parseInt(table_col_num)
+        this._tablePadding = parseInt(table_padding)
 
-        this._cell_w = parseInt(cell_w)
-        this._cell_h = parseInt(cell_h)
+        this._cellDimension = parseInt(cell_dimension)
 
         this.startPositions = null
         this.endPositions = null
@@ -119,6 +117,7 @@ class LaserPathDrawing {
             this.endPositions.push(solution.get_path()[0])
 
             this.breakPoints.push(null)
+
             switch (this.startPositions[this.startPositions.length - 1].direction) {
                 case 0:
                     this.startCoords.push(new Position(this._intToCoord(this.startPositions[this.startPositions.length - 1].row), this._intToCoord(this.startPositions[this.startPositions.length - 1].col), 0))
@@ -152,48 +151,49 @@ class LaserPathDrawing {
             this._checkChangeDir(i)
 
             if (this.breakPoints[i] != null) {
-                laserPaths.push([this.startCoords[i], this.breakPoints[i], this.endCoords[i]])
+                if (this._isCoordValid(this.endCoords[i])) {
+                    laserPaths.push([this.startCoords[i], this.breakPoints[i], this.endCoords[i]])
+                }
             } else {
-                laserPaths.push([this.startCoords[i], this.endCoords[i]])
+                if (this._isCoordValid(this.endCoords[i])) {
+                    laserPaths.push([this.startCoords[i], this.endCoords[i]])
+                }
             }
         }
         return laserPaths
     }
 
     isRemainedStep() {
-
-        if (this.startCoords.some((element, index, array) => {
-                return element.row < 0 || element.row > 500 || element.col < 0 || element.col > 500
-            })) {
-            return true
-        }
-
-        // if (!(this.solutionsStepPointer < this.solution.length)) {
-        //     this._clearBreakPoint()
-        // }
-
         return this.solutionsStepPointer.some((element, index, array)=>{return this._checkValidsolutionStepPointer(element, index, array)})
     }
 
     _checkValidsolutionStepPointer(element, index, array){
-        return element.length < this.solutions[index].length
+        console.log(element + " ? " +(this.solutions[index].length - 1));
+        console.log("VALID:"+this.endCoords[index].row);
+        if(element == this.solutions[index].length-1){
+
+            return this._isCoordValid(this.endCoords[index])
+        }else {
+            return element < this.solutions[index].length
+        }
     }
 
     _checkChangeDir(solutionPointer) {
         // console.log("Dir: " + this.solutionStepPointer);
         if (this._isPosMiddleOfCell(this.endCoords[solutionPointer].row) && this._isPosMiddleOfCell(this.endCoords[solutionPointer].col)) {
 
-            if (this.solutions[solutionPointer].get_path().length - 1 > this.solutionStepPointer[solutionPointer]) {
-                this.solutionStepPointer[solutionPointer]++
+            if (this.solutions[solutionPointer].get_path().length - 1 > this.solutionsStepPointer[solutionPointer]) {
+                this.solutionsStepPointer[solutionPointer]++
             }
 
-            this.endPositions[solutionPointer] = this.solutions[solutionPointer][this.solutionStepPointer]
+            this.endPositions[solutionPointer] = this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer]]
+            console.log(this.endPositions[solutionPointer]);
             this.endCoords[solutionPointer].direction = this.endPositions[solutionPointer].direction
             this._checkForBreakPoint(solutionPointer)
         }
 
         if (this._isPosMiddleOfCell(this.startCoords[solutionPointer].row) && this._isPosMiddleOfCell(this.startCoords[solutionPointer].col)) {
-            this.startPositions[solutionPointer] = this.solutions[solutionPointer][this.solutionStepPointer]
+            this.startPositions[solutionPointer] = this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer]]
             this.startCoords[solutionPointer].direction = this.startPositions[solutionPointer].direction
             this._clearBreakPoint(solutionPointer)
         }
@@ -201,10 +201,10 @@ class LaserPathDrawing {
 
     _checkForBreakPoint(solutionPointer) {
 
-        if (this.solutions[solutionPointer].get_path()[this.solutionsStepPointer - 1].direction != this.solutions[solutionPointer].get_path()[this.solutionStepPointer]) {
-            this.breakPoints[solutionPointer] = new Position(this._intToCoord(this.solutions[solutionPointer].get_path()[this.solutionStepPointer].row),
-                this._intToCoord(this.solutions[solutionPointer].get_path()[this.solutionStepPointer].col),
-                this.solutions[solutionPointer].get_path()[this.solutionStepPointer].direction)
+        if (this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer] - 1].direction != this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer]]) {
+            this.breakPoints[solutionPointer] = new Position(this._intToCoord(this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer]].row),
+                this._intToCoord(this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer]].col),
+                this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer]].direction)
 
         }
     }
@@ -232,16 +232,51 @@ class LaserPathDrawing {
     }
 
     _intToCoord(integer) {
-        return integer * this._cell_w + this._cell_w / 2 + this._t_padding
+        return integer * this._cellDimension + (this._cellDimension / 2) + this._tablePadding
     }
 
     _coordToInt(coord) {
-        return (coord - this._t_padding - (this._cell_w / 2)) % this._cell_w
+        return (coord - this._tablePadding - (this._cellDimension / 2)) % this._cellDimension
     }
 
     _isPosMiddleOfCell(pos) {
         return this._coordToInt(pos) == 0
     }
+
+    _isCoordValid(coord){
+        return coord.row > 0 && coord.row < this._tableDimension+this._tablePadding &&
+               coord.col > 0 && coord.col < this._tableDimension+this._tablePadding
+    }
+
+}
+
+
+class GameBoard {
+    constructor(context, cellDimension, boardDimension, tablePadding) {
+        this._context = context
+        this._cellDimension = cellDimension
+        this._boardDimension = boardDimension
+        this._tablePadding = tablePadding
+    }
+
+    render() {
+        this._context.beginPath()
+
+        for (var x = 0; x <= this._boardDimension; x += this._cellDimension) {
+            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
+            this._context.lineTo(0.5 + x + this._tablePadding, this._boardDimension + this._tablePadding)
+        }
+
+        for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
+            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
+            this._context.lineTo(this._boardDimension + this._tablePadding, 0.5 + y + this._tablePadding);
+        }
+
+        this._context.lineWidth = 1
+        this._context.strokeStyle = "black"
+        this._context.stroke()
+    }
+
 
 }
 
@@ -269,7 +304,7 @@ class Canvas {
         this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
         this._parkingTable = new Parking(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
 
-        this._laserPathDrawing = new LaserPathDrawing(this._boardWidth, this._boardWidth, 5, 5, this._tablePadding, this._cellDimension, this._cellDimension)
+        this._laserPathDrawing = new LaserPathDrawing(this._boardWidth, 5, 5, this._tablePadding, this._cellDimension)
         this._drawingLaserIsInProgress = false
 
         this._connectMouseEvents()
@@ -506,6 +541,7 @@ class Canvas {
     _drawLaser() {
 
         let paths = this._laserPathDrawing.next()
+        //console.log("PATHS:"+paths);
         for (let path of paths) {
             this._context.beginPath()
             for (var i = 0; i < path.length - 1; i++) {
@@ -575,33 +611,35 @@ class HitCounter {
 }
 
 
-class GameBoard {
-    constructor(context, cellDimension, boardDimension, tablePadding) {
-        this._context = context
-        this._cellDimension = cellDimension
-        this._boardDimension = boardDimension
-        this._tablePadding = tablePadding
+class Position {
+    constructor(row, col, direction) {
+        this.row = row
+        this.col = col
+        this.direction = direction
+    }
+}
+
+
+class Path {
+    constructor() {
+        this._path = []
     }
 
-    render() {
-        this._context.beginPath()
-
-        for (var x = 0; x <= this._boardDimension; x += this._cellDimension) {
-            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
-            this._context.lineTo(0.5 + x + this._tablePadding, this._boardDimension + this._tablePadding)
-        }
-
-        for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
-            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
-            this._context.lineTo(this._boardDimension + this._tablePadding, 0.5 + y + this._tablePadding);
-        }
-
-        this._context.lineWidth = 1
-        this._context.strokeStyle = "black"
-        this._context.stroke()
+    push(element) {
+        this._path.push(element)
     }
 
+    get length(){
+        return this._path.length
+    }
 
+    get_last() {
+        return this._path[this._path.length - 1]
+    }
+
+    get_path() {
+        return this._path
+    }
 }
 
 
@@ -646,7 +684,8 @@ class LaserPathCalculator {
                                     paths.push(new Path())
 
                                     for (var j = 0; j < paths[i].length - 1; j++) {
-                                        paths[paths.length - 1].push(paths[paths.length - 1][j])
+                            
+                                        paths[paths.length - 1].push(paths[i].get_path()[j])
                                     }
 
                                     paths[paths.length - 1].push(new Position(nextPos.row, nextPos.col, newDir[newDirI]))
@@ -731,38 +770,6 @@ class LaserPathCalculator {
         return position.row >= 0 && position.col >= 0 && position.row < this._board.length && position.col < this._board.length
     }
 
-}
-
-
-class Position {
-    constructor(row, col, direction) {
-        this.row = row
-        this.col = col
-        this.direction = direction
-    }
-}
-
-
-class Path {
-    constructor() {
-        this._path = []
-    }
-
-    push(element) {
-        this._path.push(element)
-    }
-
-    get length(){
-        return this._path.length
-    }
-
-    get_last() {
-        return this._path[this._path.length - 1]
-    }
-
-    get_path() {
-        return this._path
-    }
 }
 
 
@@ -869,6 +876,7 @@ class Game {
     _fire(){
         if(this.canvas.isParkingEmpty()){
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
+            console.log(result.paths);
             this.canvas.drawResult(result.paths)
             // if(result.valid){
             //
@@ -1039,7 +1047,7 @@ class Mirror extends MasterBlock {
           return [0]
           break
         case 180:
-          retur [270]
+          return [270]
           break;
         case 270:
           return [180]

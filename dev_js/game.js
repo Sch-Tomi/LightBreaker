@@ -101,6 +101,7 @@ class Game {
     _fire(){
         if(this.canvas.isParkingEmpty()){
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
+            console.log(result.paths);
             this.canvas.drawResult(result.paths)
             // if(result.valid){
             //

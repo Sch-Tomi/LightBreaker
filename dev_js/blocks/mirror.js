@@ -42,7 +42,7 @@ class Mirror extends MasterBlock {
           return [0]
           break
         case 180:
-          retur [270]
+          return [270]
           break;
         case 270:
           return [180]

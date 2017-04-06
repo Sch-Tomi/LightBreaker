@@ -21,7 +21,7 @@ class Canvas {
         this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
         this._parkingTable = new Parking(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
 
-        this._laserPathDrawing = new LaserPathDrawing(this._boardWidth, this._boardWidth, 5, 5, this._tablePadding, this._cellDimension, this._cellDimension)
+        this._laserPathDrawing = new LaserPathDrawing(this._boardWidth, 5, 5, this._tablePadding, this._cellDimension)
         this._drawingLaserIsInProgress = false
 
         this._connectMouseEvents()
@@ -258,6 +258,7 @@ class Canvas {
     _drawLaser() {
 
         let paths = this._laserPathDrawing.next()
+        //console.log("PATHS:"+paths);
         for (let path of paths) {
             this._context.beginPath()
             for (var i = 0; i < path.length - 1; i++) {

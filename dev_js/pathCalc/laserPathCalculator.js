@@ -39,7 +39,8 @@ class LaserPathCalculator {
                                     paths.push(new Path())
 
                                     for (var j = 0; j < paths[i].length - 1; j++) {
-                                        paths[paths.length - 1].push(paths[paths.length - 1][j])
+                            
+                                        paths[paths.length - 1].push(paths[i].get_path()[j])
                                     }
 
                                     paths[paths.length - 1].push(new Position(nextPos.row, nextPos.col, newDir[newDirI]))
