@@ -6,7 +6,8 @@ class CheckPoint extends MasterBlock {
     }
 
     get_newDir(dir) {
-        return dir
+        this._hit = true
+        return [dir]
     }
 
     hitStatus() {

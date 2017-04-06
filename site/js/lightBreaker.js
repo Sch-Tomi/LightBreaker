@@ -727,6 +727,10 @@ class LaserPathCalculator {
                 if (paths_valid[i]) {
                     var currentPos = paths[i].get_last()
                     var nextPos = this._calcNewPosition(currentPos)
+                    console.log("currentPos: ");
+                    console.log(currentPos);
+                    console.log("nextPos");
+                    console.log(nextPos);
                     if (this._isPostionValid(nextPos)) {
                         if (this._board[nextPos.row][nextPos.col] !== null) {
 
@@ -736,6 +740,8 @@ class LaserPathCalculator {
                             }
 
                             var newDir = this._board[nextPos.row][nextPos.col].get_newDir(nextPos.direction)
+                            console.log("newDir:");
+                            console.log(newDir);
                             paths[i].push(new Position(nextPos.row, nextPos.col, newDir[0]))
 
                             if (newDir.length > 1) {
@@ -743,7 +749,7 @@ class LaserPathCalculator {
                                     paths.push(new Path())
 
                                     for (var j = 0; j < paths[i].length - 1; j++) {
-                            
+
                                         paths[paths.length - 1].push(paths[i].get_path()[j])
                                     }
 
@@ -775,7 +781,7 @@ class LaserPathCalculator {
         if (hitCounter >= this._minHit) {
             for (var i = 0; i < this._board.length; i++) {
                 for (var j = 0; j < this._board[i].length; j++) {
-                    if (this._board[i][j] instanceof Target)
+                    if (this._board[i][j] instanceof Target || this._board[i][j] instanceof CheckPoint)
                         if (!this._board[i][j].hitStatus()) return false
                 }
             }
@@ -826,6 +832,7 @@ class LaserPathCalculator {
     }
 
     _isPostionValid(position) {
+        console.log(position);
         return position.row >= 0 && position.col >= 0 && position.row < this._board.length && position.col < this._board.length
     }
 
@@ -1044,7 +1051,8 @@ class CheckPoint extends MasterBlock {
     }
 
     get_newDir(dir) {
-        return dir
+        this._hit = true
+        return [dir]
     }
 
     hitStatus() {

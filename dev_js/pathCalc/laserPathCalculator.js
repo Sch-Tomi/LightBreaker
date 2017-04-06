@@ -39,7 +39,7 @@ class LaserPathCalculator {
                                     paths.push(new Path())
 
                                     for (var j = 0; j < paths[i].length - 1; j++) {
-                            
+
                                         paths[paths.length - 1].push(paths[i].get_path()[j])
                                     }
 
@@ -71,7 +71,7 @@ class LaserPathCalculator {
         if (hitCounter >= this._minHit) {
             for (var i = 0; i < this._board.length; i++) {
                 for (var j = 0; j < this._board[i].length; j++) {
-                    if (this._board[i][j] instanceof Target)
+                    if (this._board[i][j] instanceof Target || this._board[i][j] instanceof CheckPoint)
                         if (!this._board[i][j].hitStatus()) return false
                 }
             }
