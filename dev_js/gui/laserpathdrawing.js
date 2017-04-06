@@ -93,8 +93,8 @@ class LaserPathDrawing {
     }
 
     _checkValidsolutionStepPointer(element, index, array){
-        console.log(element + " ? " +(this.solutions[index].length - 1));
-        console.log("VALID:"+this.endCoords[index].row);
+        // console.log(element + " ? " +(this.solutions[index].length - 1));
+        // console.log("VALID:"+this.endCoords[index].row);
         if(element == this.solutions[index].length-1){
 
             return this._isCoordValid(this.endCoords[index])
@@ -112,7 +112,7 @@ class LaserPathDrawing {
             }
 
             this.endPositions[solutionPointer] = this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer]]
-            console.log(this.endPositions[solutionPointer]);
+            // console.log(this.endPositions[solutionPointer]);
             this.endCoords[solutionPointer].direction = this.endPositions[solutionPointer].direction
             this._checkForBreakPoint(solutionPointer)
         }

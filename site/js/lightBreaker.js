@@ -168,8 +168,8 @@ class LaserPathDrawing {
     }
 
     _checkValidsolutionStepPointer(element, index, array){
-        console.log(element + " ? " +(this.solutions[index].length - 1));
-        console.log("VALID:"+this.endCoords[index].row);
+        // console.log(element + " ? " +(this.solutions[index].length - 1));
+        // console.log("VALID:"+this.endCoords[index].row);
         if(element == this.solutions[index].length-1){
 
             return this._isCoordValid(this.endCoords[index])
@@ -187,7 +187,7 @@ class LaserPathDrawing {
             }
 
             this.endPositions[solutionPointer] = this.solutions[solutionPointer].get_path()[this.solutionsStepPointer[solutionPointer]]
-            console.log(this.endPositions[solutionPointer]);
+            // console.log(this.endPositions[solutionPointer]);
             this.endCoords[solutionPointer].direction = this.endPositions[solutionPointer].direction
             this._checkForBreakPoint(solutionPointer)
         }
@@ -611,6 +611,65 @@ class HitCounter {
 }
 
 
+class Modal {
+    constructor() {
+        this._text = ""
+        this._header = ""
+
+        this._createModal()
+        //this.show()
+    }
+
+    setUp(newHeader, newText){
+
+        this._text = ""
+
+        for (let text of newText) {
+            this._text += "<p>"+text+"</p>"
+        }
+
+        this._header = newHeader
+    }
+
+    _createModal(){
+
+        let modal = document.createElement('div')
+        modal.id = "messageModal"
+        modal.className = "modal"
+
+        let content = document.createElement('div')
+        content.className = "modal-content"
+
+        let header = document.createElement('div')
+        header.className = "modal-header"
+        header.innerHTML += '<span id="messageModal-close" class="close">&times;</span>'
+        header.innerHTML += '<h2 id="messageModal-header"></h2>'
+
+        let body = document.createElement('div')
+        body.className = "modal-body"
+        body.id = "messageModal-body"
+
+        content.appendChild(header)
+        content.appendChild(body)
+        modal.appendChild(content)
+
+        document.body.appendChild(modal)
+
+        document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
+    }
+
+    hide(){
+        document.querySelector('#messageModal').style.display = "none";
+    }
+
+    show(){
+        document.querySelector('#messageModal-header').innerHTML = this._header
+        document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
+        document.querySelector('#messageModal').style.display = "block";
+    }
+}
+
+
 class Position {
     constructor(row, col, direction) {
         this.row = row
@@ -777,6 +836,7 @@ class Game {
     constructor() {
         this.canvas = new Canvas()
         this.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
+
         this._setInteface()
         this._precentRightClick()
 
@@ -790,9 +850,12 @@ class Game {
     }
 
     _setInteface(){
+
+        this._modal = new Modal()
+
         this.selector = document.createElement("select")
         this.selector.id = "lvlSelect"
-        this.selector.innerHTML += "<option disabled selected value> -- select a level -- </option>"
+        this.selector.innerHTML += "<option disabled selected value> -- válassz egy pályát -- </option>"
         this.selector.innerHTML += "<option value='1'>Level 1</option>"
         this.selector.innerHTML += "<option value='2'>Level 2</option>"
         this.selector.innerHTML += "<option value='3'>Level 3</option>"
@@ -803,7 +866,7 @@ class Game {
         }
 
         this.fireButton = document.createElement('button')
-        this.fireButton.textContent = 'Fire!'
+        this.fireButton.textContent = 'Tűz!'
         this.fireButton.className = 'fireBtn'
         this.fireButton.id = "fireButton"
 
@@ -876,11 +939,17 @@ class Game {
     _fire(){
         if(this.canvas.isParkingEmpty()){
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
-            console.log(result.paths);
+            console.log(result);
+            if(result.valid){
+                this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
+            }else {
+                this._modal.setUp("Nem sikerült!", ["Nem sikerült megfelelő számu célt eltalálnod!",
+                                                    "Hiányzó találatok: " + (parseInt(this._minHit) - parseInt(result.hits))])
+            }
+
+            this._modal.show()
             this.canvas.drawResult(result.paths)
-            // if(result.valid){
-            //
-            // }
+
         }
     }
 

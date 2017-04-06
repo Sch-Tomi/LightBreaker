@@ -2,6 +2,7 @@ class Game {
     constructor() {
         this.canvas = new Canvas()
         this.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
+
         this._setInteface()
         this._precentRightClick()
 
@@ -15,9 +16,12 @@ class Game {
     }
 
     _setInteface(){
+
+        this._modal = new Modal()
+
         this.selector = document.createElement("select")
         this.selector.id = "lvlSelect"
-        this.selector.innerHTML += "<option disabled selected value> -- select a level -- </option>"
+        this.selector.innerHTML += "<option disabled selected value> -- válassz egy pályát -- </option>"
         this.selector.innerHTML += "<option value='1'>Level 1</option>"
         this.selector.innerHTML += "<option value='2'>Level 2</option>"
         this.selector.innerHTML += "<option value='3'>Level 3</option>"
@@ -28,7 +32,7 @@ class Game {
         }
 
         this.fireButton = document.createElement('button')
-        this.fireButton.textContent = 'Fire!'
+        this.fireButton.textContent = 'Tűz!'
         this.fireButton.className = 'fireBtn'
         this.fireButton.id = "fireButton"
 
@@ -101,11 +105,17 @@ class Game {
     _fire(){
         if(this.canvas.isParkingEmpty()){
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
-            console.log(result.paths);
+            console.log(result);
+            if(result.valid){
+                this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
+            }else {
+                this._modal.setUp("Nem sikerült!", ["Nem sikerült megfelelő számu célt eltalálnod!",
+                                                    "Hiányzó találatok: " + (parseInt(this._minHit) - parseInt(result.hits))])
+            }
+
+            this._modal.show()
             this.canvas.drawResult(result.paths)
-            // if(result.valid){
-            //
-            // }
+
         }
     }
 
