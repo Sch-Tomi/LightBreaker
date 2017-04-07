@@ -88,7 +88,6 @@ class Game {
 
     _level3() {
         this.canvas.addBlock(new Laser(90, 1, 2, false, true))
-        this.canvas.addBlock(new Blocker(0, 2, 1, false, true))
         this.canvas.addBlock(new Mirror(270, 2, 0, false, true))
         this.canvas.addBlock(new Mirror(270, 4, 0, false, true))
         this.canvas.addBlock(new Mirror(0, 3, 2, false, false))
@@ -106,7 +105,6 @@ class Game {
     _fire() {
         if (this.canvas.isParkingEmpty()) {
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
-            console.log(result);
             if (result.valid) {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
             } else {

@@ -25,6 +25,7 @@ class Modal {
         modal.className = "modal"
 
         let content = document.createElement('div')
+        content.id = "messageModal-content"
         content.className = "modal-content"
 
         let header = document.createElement('div')
@@ -43,15 +44,35 @@ class Modal {
         document.body.appendChild(modal)
 
         document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
+
+
     }
 
     hide(){
-        document.querySelector('#messageModal').style.display = "none";
+
+        document.querySelector('#messageModal').style.webkitAnimationName = 'fadeOut'
+        document.querySelector('#messageModal-content').style.webkitAnimationName = 'slideOut'
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "none";
+        })
+
+
     }
 
     show(){
+
+        document.querySelector('#messageModal').style.animationName = 'fadeIn'
+        document.querySelector('#messageModal-content').style.animationName = 'slideIn'
+
         document.querySelector('#messageModal-header').innerHTML = this._header
         document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
         document.querySelector('#messageModal').style.display = "block";
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "block";
+        })
+
+        setTimeout(() => {this.hide()}, 3000);
     }
 }

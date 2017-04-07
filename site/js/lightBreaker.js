@@ -638,6 +638,7 @@ class Modal {
         modal.className = "modal"
 
         let content = document.createElement('div')
+        content.id = "messageModal-content"
         content.className = "modal-content"
 
         let header = document.createElement('div')
@@ -656,16 +657,36 @@ class Modal {
         document.body.appendChild(modal)
 
         document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
+
+
     }
 
     hide(){
-        document.querySelector('#messageModal').style.display = "none";
+
+        document.querySelector('#messageModal').style.webkitAnimationName = 'fadeOut'
+        document.querySelector('#messageModal-content').style.webkitAnimationName = 'slideOut'
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "none";
+        })
+
+
     }
 
     show(){
+
+        document.querySelector('#messageModal').style.animationName = 'fadeIn'
+        document.querySelector('#messageModal-content').style.animationName = 'slideIn'
+
         document.querySelector('#messageModal-header').innerHTML = this._header
         document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
         document.querySelector('#messageModal').style.display = "block";
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "block";
+        })
+
+        setTimeout(() => {this.hide()}, 3000);
     }
 }
 
@@ -922,7 +943,6 @@ class Game {
 
     _level3() {
         this.canvas.addBlock(new Laser(90, 1, 2, false, true))
-        this.canvas.addBlock(new Blocker(0, 2, 1, false, true))
         this.canvas.addBlock(new Mirror(270, 2, 0, false, true))
         this.canvas.addBlock(new Mirror(270, 4, 0, false, true))
         this.canvas.addBlock(new Mirror(0, 3, 2, false, false))
@@ -940,7 +960,6 @@ class Game {
     _fire() {
         if (this.canvas.isParkingEmpty()) {
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
-            console.log(result);
             if (result.valid) {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
             } else {
