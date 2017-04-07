@@ -971,13 +971,13 @@ class Game {
                         "Hiányzó találatok: " + missNumber
                     ])
                 }
-
             }
-
-            this._modal.show()
             this.canvas.drawResult(result.paths)
-
+        }else {
+            this._modal.setUp("Hiba!", ["Minden tükröt kötelezően fel kell használnod!"])
         }
+
+        this._modal.show()
     }
 
     _main() {
