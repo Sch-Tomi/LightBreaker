@@ -15,7 +15,7 @@ class Game {
         this._main();
     }
 
-    _setInteface(){
+    _setInteface() {
 
         this._modal = new Modal()
 
@@ -42,7 +42,7 @@ class Game {
         }
     }
 
-    _precentRightClick(){
+    _precentRightClick() {
         document.body.oncontextmenu = () => {
             return false
         }
@@ -88,6 +88,7 @@ class Game {
 
     _level3() {
         this.canvas.addBlock(new Laser(90, 1, 2, false, true))
+        this.canvas.addBlock(new Blocker(0, 2, 1, false, true))
         this.canvas.addBlock(new Mirror(270, 2, 0, false, true))
         this.canvas.addBlock(new Mirror(270, 4, 0, false, true))
         this.canvas.addBlock(new Mirror(0, 3, 2, false, false))
@@ -102,15 +103,22 @@ class Game {
         this.canvas.setLimit(this._minHit)
     }
 
-    _fire(){
-        if(this.canvas.isParkingEmpty()){
+    _fire() {
+        if (this.canvas.isParkingEmpty()) {
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
             console.log(result);
-            if(result.valid){
+            if (result.valid) {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
-            }else {
-                this._modal.setUp("Nem sikerült!", ["Nem sikerült megfelelő számu célt eltalálnod!",
-                                                    "Hiányzó találatok: " + (parseInt(this._minHit) - parseInt(result.hits))])
+            } else {
+                let missNumber = parseInt(this._minHit) - parseInt(result.hits)
+                if (missNumber == 0) {
+                    this._modal.setUp("Nem sikerült!", ["Nem sikerült minden kötelező célt eltalálnod!"])
+                } else {
+                    this._modal.setUp("Nem sikerült!", ["Nem sikerült megfelelő számu célt eltalálnod!",
+                        "Hiányzó találatok: " + missNumber
+                    ])
+                }
+
             }
 
             this._modal.show()

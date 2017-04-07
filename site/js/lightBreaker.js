@@ -727,10 +727,6 @@ class LaserPathCalculator {
                 if (paths_valid[i]) {
                     var currentPos = paths[i].get_last()
                     var nextPos = this._calcNewPosition(currentPos)
-                    console.log("currentPos: ");
-                    console.log(currentPos);
-                    console.log("nextPos");
-                    console.log(nextPos);
                     if (this._isPostionValid(nextPos)) {
                         if (this._board[nextPos.row][nextPos.col] !== null) {
 
@@ -740,8 +736,6 @@ class LaserPathCalculator {
                             }
 
                             var newDir = this._board[nextPos.row][nextPos.col].get_newDir(nextPos.direction)
-                            console.log("newDir:");
-                            console.log(newDir);
                             paths[i].push(new Position(nextPos.row, nextPos.col, newDir[0]))
 
                             if (newDir.length > 1) {
@@ -832,7 +826,6 @@ class LaserPathCalculator {
     }
 
     _isPostionValid(position) {
-        console.log(position);
         return position.row >= 0 && position.col >= 0 && position.row < this._board.length && position.col < this._board.length
     }
 
@@ -856,7 +849,7 @@ class Game {
         this._main();
     }
 
-    _setInteface(){
+    _setInteface() {
 
         this._modal = new Modal()
 
@@ -883,7 +876,7 @@ class Game {
         }
     }
 
-    _precentRightClick(){
+    _precentRightClick() {
         document.body.oncontextmenu = () => {
             return false
         }
@@ -929,6 +922,7 @@ class Game {
 
     _level3() {
         this.canvas.addBlock(new Laser(90, 1, 2, false, true))
+        this.canvas.addBlock(new Blocker(0, 2, 1, false, true))
         this.canvas.addBlock(new Mirror(270, 2, 0, false, true))
         this.canvas.addBlock(new Mirror(270, 4, 0, false, true))
         this.canvas.addBlock(new Mirror(0, 3, 2, false, false))
@@ -943,15 +937,22 @@ class Game {
         this.canvas.setLimit(this._minHit)
     }
 
-    _fire(){
-        if(this.canvas.isParkingEmpty()){
+    _fire() {
+        if (this.canvas.isParkingEmpty()) {
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
             console.log(result);
-            if(result.valid){
+            if (result.valid) {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
-            }else {
-                this._modal.setUp("Nem sikerült!", ["Nem sikerült megfelelő számu célt eltalálnod!",
-                                                    "Hiányzó találatok: " + (parseInt(this._minHit) - parseInt(result.hits))])
+            } else {
+                let missNumber = parseInt(this._minHit) - parseInt(result.hits)
+                if (missNumber == 0) {
+                    this._modal.setUp("Nem sikerült!", ["Nem sikerült minden kötelező célt eltalálnod!"])
+                } else {
+                    this._modal.setUp("Nem sikerült!", ["Nem sikerült megfelelő számu célt eltalálnod!",
+                        "Hiányzó találatok: " + missNumber
+                    ])
+                }
+
             }
 
             this._modal.show()
@@ -1068,7 +1069,7 @@ class Blocker extends MasterBlock {
     }
 
     get_newDir(dir) {
-        return dir
+        return [dir]
     }
 }
 

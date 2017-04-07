@@ -4,6 +4,6 @@ class Blocker extends MasterBlock {
     }
 
     get_newDir(dir) {
-        return dir
+        return [dir]
     }
 }
