@@ -22,7 +22,7 @@
 
         public function run(){
             // URL feldolgozás
-            $parsedUrl = $this->urlParser->parse($this->route, $_SERVER['REQUEST_URI']);
+            $parsedUrl = $this->urlParser->parse($this->route, $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
             $controllerName = explode("/", $parsedUrl[0]);
             $params = $parsedUrl[1];
 
@@ -33,7 +33,8 @@
             if(count($controllerName)==1){
                 $currentController->index(...$params);
             }else{
-                $currentController->$controllerName[1](...$params);
+                $functionName = $controllerName[1];
+                $currentController->$functionName(...$params);
             }
 
         }

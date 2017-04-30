@@ -18,12 +18,6 @@
     }
      ?>
 
-    <script type="text/javascript">
-        window.addEventListener('load', function() {
-            var g = new Game().run()
-        });
-    </script>
-
 </head>
 
 <body>
@@ -40,6 +34,26 @@
 
 
             <div id="main_content">
+
+                <?php
+                    if (isset($data['errors'])) {
+                        ?>
+                        <div class="errors">
+                            <ul>
+                                <?php
+                                foreach ($data["errors"] as $error) {
+                                    ?>
+                                    <li><?= $error; ?></li>
+                                    <?php
+                                }
+                                 ?>
+                            </ul>
+                        </div>
+
+                        <?php
+                    }
+                 ?>
+
                 <?php
                     echo $this->get_view($view);
                  ?>

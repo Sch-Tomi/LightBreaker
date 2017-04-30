@@ -1,15 +1,23 @@
 <?php
 
-    class UrlParser
-    {
+    class UrlParser{
 
-        function __construct()
-        {
+        function __construct(){
+        }
+
+        public function parse($routes, $url, $method){
+
+            $new_route = $this->find_fitting_route($routes[$method], $url);
+
+            if ($new_route != "") {
+                return $new_route;
+            }else {
+                return [$routes['GET']["404"], []];
+            }
 
         }
 
-        public function parse($routes, $url){
-
+        private function find_fitting_route($routes, $url){
             $keys = array_keys($routes);
             $matched_key = "";
             $matched_vars = "";
@@ -24,14 +32,12 @@
 
             if ($matched_key != "") {
                 return [$routes[$matched_key], $matched_vars];
-            }else {
-                return [$routes["404"], []];
             }
 
+            return "";
         }
 
-        private function change_specials_to_regex($url)
-        {
+        private function change_specials_to_regex($url){
             $changed_url = str_replace("(:any)", "([[:alnum:]]+)", $url);
             $changed_url = str_replace("(:string)", "([[:alpha:]]+)", $changed_url);
             $changed_url = str_replace("(:num)", "([[:digit:]]+)", $changed_url);

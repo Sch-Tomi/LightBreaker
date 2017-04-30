@@ -14,8 +14,7 @@
             $this->styles = array();
         }
 
-        public function set_template($template)
-        {
+        public function set_template($template){
             $this->template = $template;
         }
 
@@ -37,7 +36,15 @@
         }
 
         protected function get_section($name){
-            return file_get_contents(__DIR__."/../views/".$this->sections[$name].".php");
+
+            if(array_key_exists ($name, $this->sections)){
+                try {
+                    return file_get_contents(__DIR__."/../views/".$this->sections[$name].".php");
+                } catch (Exception $e) {
+                    return "";
+                }
+            }
+            return "";
         }
 
         protected function get_view($name){

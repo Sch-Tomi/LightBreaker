@@ -8,13 +8,17 @@
     */
 
 
-    $this->route['/'] = 'Main';
-    $this->route['404'] = 'Errors/show_404';
+    $this->route['GET']['/'] = 'Main';
+    $this->route['GET']['404'] = 'Errors/show_404';
 
-    $this->route['/game'] = "Game";
+    $this->route['GET']['/game'] = "Main/game";
 
-    $this->route['/login'] = "Auth/Login";
-    $this->route['/product/(:any)/(:string)/(:num)'] = "PROD";
+    $this->route['POST']['/login'] = "Auth/login";
+
+    $this->route['GET']['/register'] = "Auth/register";
+    $this->route['POST']['/register'] = "Auth/do_register";
+
+
 
 
 
