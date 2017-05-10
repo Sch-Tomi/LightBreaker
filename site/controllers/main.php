@@ -11,6 +11,7 @@
             $this->view->add_style("css/style.css");
             $this->view->add_style("css/modal.css");
             $this->view->add_style("css/welcome.css");
+            $this->view->add_style("css/login.css");
 
 
 

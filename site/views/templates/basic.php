@@ -32,8 +32,12 @@
         <div  id="site_content">
 
 
+                <?php if($this->get_section("sidebar") != ""){ ?>
+                    <div id="main_content" class="sidebar_on">
+                <?php }else{ ?>
+                    <div id="main_content">
+                <?php } ?>
 
-            <div id="main_content">
 
                 <?php
                     if (isset($data['errors'])) {
@@ -53,6 +57,25 @@
                         <?php
                     }
                  ?>
+
+                 <?php
+                     if (isset($data['infos'])) {
+                         ?>
+                         <div class="infos">
+                             <ul>
+                                 <?php
+                                 foreach ($data["infos"] as $info) {
+                                     ?>
+                                     <li><?= $info; ?></li>
+                                     <?php
+                                 }
+                                  ?>
+                             </ul>
+                         </div>
+
+                         <?php
+                     }
+                  ?>
 
                 <?php
                     echo $this->get_view($view);

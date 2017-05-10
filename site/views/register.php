@@ -1,16 +1,19 @@
 <div class="register">
-    <form class="" action="/register" method="post">
-        <label for="name">Név</label><br>
-        <input type="text" name="name" value=""><br>
-        <label for="email1">e-mail</label><br>
-        <input type="email" name="email1" value="" placeholder="kiss.pista@test.com"><br>
-        <label for="email2">e-mail megerősítés</label><br>
-        <input type="email" name="email2" value="" placeholder="kiss.pista@test.com"><br>
-        <label for="pw1">Jelszó</label><br>
-        <input type="password" name="pw1" value="" ><br>
-        <label for="pw2">Jelszó megerősítés</label><br>
-        <input type="password" name="pw2" value="" ><br>
 
-        <input type="submit" name="" value="Regisztráció">
+</div>
+<div class="login-card">
+    <h1>Bejelentkezés</h1><br>
+    <form class="" action="/register" method="post">
+        <input type="text" name="name" value="" placeholder="Név">
+        <input type="email" name="email1" value="" placeholder="e-mail (user@domain.com)">
+        <input type="email" name="email2" value="" placeholder="e-mail (user@domain.com)">
+        <input type="password" name="pw1" value="" placeholder="Jelszó">
+        <input type="password" name="pw2" value="" placeholder="Jelszó">
+
+        <input class="login login-submit" type="submit" name="" value="Regisztráció">
     </form>
+
+    <div class="login-help">
+      <a href="/login">Bejelentkezés</a>
+    </div>
 </div>

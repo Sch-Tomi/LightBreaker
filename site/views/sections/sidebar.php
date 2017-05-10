@@ -3,13 +3,19 @@
         <div class="sidebar_item">
             <h2>Bejelentkezés</h2>
             <div class="sidebar-content">
-                <form class="" action="/login" method="post">
-                    <label for="email">e-mail:</label>
-                    <input type="text" name="email" placeholder="kiss.pista@gmail.com">
-                    <label for="password">jelszó:</label>
-                    <input type="password" name="password" value="">
-                    <input type="submit" name="" value="Bejelentkezés">
-                </form>
+                <div class="login-box">
+                    <form class="email-login" action="/login" method="post">
+                      <div class="u-form-group">
+                        <input type="email" placeholder="Email"/>
+                      </div>
+                      <div class="u-form-group">
+                        <input type="password" placeholder="Password"/>
+                      </div>
+                      <div class="u-form-group">
+                        <button>Bejelentkezés</button>
+                      </div>
+                    </form>
+                 </div>
             </div>
         </div>
     </div>

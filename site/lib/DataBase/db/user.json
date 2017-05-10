@@ -1,10 +1,16 @@
 {
-    "stucture": {
-            "id":"int",
-            "name":"string",
-            "email":"string",
-            "password":"string"    
+    "structure": {
+        "id": "int",
+        "name": "string",
+        "email": "string",
+        "password": "string"
     },
-    "data":[]
-
+    "data": [
+        {
+            "name": "Test",
+            "email": "test@test.com",
+            "password": "7a6817a9fb83914a5a914bf116a73a0d31e3eb649b544cd5a3bae95fef9c5553",
+            "id": 1
+        }
+    ]
 }

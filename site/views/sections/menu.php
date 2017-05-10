@@ -8,6 +8,7 @@
         <ul id="menu">
             <li class="current"><a href="/">Főoldal</a></li>
             <li class=""><a href="/game">Játék</a></li>
+            <li class=""><a href="/login">Bejelentkezés</a></li>
             <li class=""><a href="/register">Regisztráció</a></li>
         </ul>
     </div>
