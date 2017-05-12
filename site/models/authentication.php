@@ -1,7 +1,7 @@
 <?php
 
 
-    class Authentication
+    class AuthenticationModel
     {
 
         private $libMan;

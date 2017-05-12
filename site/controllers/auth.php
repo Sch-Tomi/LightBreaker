@@ -7,7 +7,7 @@
         function __construct(){
             parent::__construct();
 
-            $this->auth = $this->modelMan->load_and_create("Authentication");
+            $this->auth = $this->modelMan->load_and_create("AuthenticationModel");
 
             $this->view->set_template("basic");
 
@@ -59,7 +59,10 @@
 
         }
 
-
+        public function logout() {
+            $this->auth->logout();
+            $this->redirect('/');
+        }
 
 
     }

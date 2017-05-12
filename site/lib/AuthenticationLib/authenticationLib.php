@@ -27,7 +27,7 @@
         public function login($email, $pw){
             $search = $this->db->from("user")->select("*")->where("email == ".$email." AND password == ".$this->hash_pw($pw))->execute();
             if(count($search) == 1){
-                session_start();
+                $this->safety_start_session();
                 $_SESSION['username'] = $email;
                 $_SESSION['admin'] = ($email == "admin@admin.hu");
                 return true;
@@ -36,23 +36,29 @@
         }
 
         public function is_logged(){
-            session_start();
+            $this->safety_start_session();
             return (isset($_SESSION["username"]));
         }
 
         public function is_admin(){
-            session_start();
+            $this->safety_start_session();
             return ($this->is_logged() && $_SESSION['admin']);
         }
 
         public function logout(){
-            session_start();
+            $this->safety_start_session();
             unset($_SESSION["username"]);
             unset($_SESSION["admin"]);
         }
 
         private function hash_pw($pw) {
             return hash("sha256", $pw);
+        }
+
+        private function safety_start_session(){
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
         }
     }
 

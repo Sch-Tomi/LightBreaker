@@ -111,14 +111,13 @@
 
         private function background_select(){
             $selected = [];
+
             foreach ($this->currentDB as $row) {
                 if($this->is_fit_to_expresson($row)){
 
                     array_push($selected, $this->get_selected_col($row));
                 }
             }
-            echo "SELECTED:";
-            var_dump($selected);
             return $selected;
         }
 

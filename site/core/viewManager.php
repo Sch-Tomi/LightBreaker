@@ -7,11 +7,16 @@
         private $scripts;
         private $styles;
 
+        private $libMan;
+
         public function __construct()
         {
             $this->sections = array();
             $this->scripts = array();
             $this->styles = array();
+
+            $this->loads = array();
+            $this->libMan = new LibManager;
         }
 
         public function set_template($template){
@@ -35,11 +40,31 @@
 
         }
 
+        public function load_lib($name){
+            $this->loads[$name] = $this->libMan->load_and_create($name);
+        }
+
+        protected function lib($name){
+            return $this->loads[$name];
+        }
+
         protected function get_section($name){
 
             if(array_key_exists ($name, $this->sections)){
                 try {
                     return file_get_contents(__DIR__."/../views/".$this->sections[$name].".php");
+                } catch (Exception $e) {
+                    return "";
+                }
+            }
+            return "";
+        }
+
+        protected function load_section($name){
+
+            if(array_key_exists ($name, $this->sections)){
+                try {
+                    require __DIR__."/../views/".$this->sections[$name].".php";
                 } catch (Exception $e) {
                     return "";
                 }

@@ -24,7 +24,7 @@
     <div id="main">
         <?php
             if($this->get_section("menu") != ""){
-                echo $this->get_section("menu");
+                $this->load_section("menu");
             }
         ?>
         <!--close menubar-->
@@ -85,7 +85,7 @@
 
             <?php
                 if($this->get_section("sidebar") != ""){
-                    echo $this->get_section("sidebar");
+                    $this->load_section("sidebar");
                 }
             ?>
             <!--close sidebar_container-->
@@ -98,7 +98,7 @@
 
     <?php
         if($this->get_section("footer") != ""){
-            echo $this->get_section("footer");
+            $this->load_section("footer");
         }
      ?>
     <!--close footer-->
