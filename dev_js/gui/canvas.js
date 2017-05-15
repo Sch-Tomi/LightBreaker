@@ -15,7 +15,7 @@ class Canvas {
 
 
         this._lock = new Image()
-        this._lock.src = "img/lock.png"
+        this._lock.src = "/img/blocks/lock.png"
 
         this._gameBoard = new GameBoard(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
         this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)

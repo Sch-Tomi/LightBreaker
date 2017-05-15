@@ -298,7 +298,7 @@ class Canvas {
 
 
         this._lock = new Image()
-        this._lock.src = "img/lock.png"
+        this._lock.src = "/img/blocks/lock.png"
 
         this._gameBoard = new GameBoard(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
         this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
@@ -859,32 +859,27 @@ class Game {
         this.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
 
         this._setInteface()
-        this._precentRightClick()
+        this._preventRightClick()
 
         this._minHit = 0
 
+        this._lvl_data = ""
+
+    }
+
+    setLvl(data) {
+        this._lvl_data = data;
     }
 
     run() {
         // Let's play this game!
+        this._parseLvl();
         this._main();
     }
 
     _setInteface() {
 
         this._modal = new Modal()
-
-        this.selector = document.createElement("select")
-        this.selector.id = "lvlSelect"
-        this.selector.innerHTML += "<option disabled selected value> -- válassz egy pályát -- </option>"
-        this.selector.innerHTML += "<option value='1'>Level 1</option>"
-        this.selector.innerHTML += "<option value='2'>Level 2</option>"
-        this.selector.innerHTML += "<option value='3'>Level 3</option>"
-
-        document.body.querySelector("#lightBreaker-lvlSelector").appendChild(this.selector)
-        this.selector.onchange = () => {
-            this._levelSelect()
-        }
 
         this.fireButton = document.createElement('button')
         this.fireButton.textContent = 'Tűz!'
@@ -897,64 +892,62 @@ class Game {
         }
     }
 
-    _precentRightClick() {
+    _preventRightClick() {
         document.body.oncontextmenu = () => {
             return false
         }
     }
 
-    _levelSelect() {
-        this.canvas.clear()
-        switch (parseInt(this.selector.options[this.selector.selectedIndex].value)) {
-            case 1:
-                this._level1()
-                break;
-            case 2:
-                this._level2()
-                break;
-            case 3:
-                this._level3()
-                break;
-            default:
+    _parseLvl() {
+        let lvl = this._lvl_data[0]
+        this._parseField(lvl.field)
+        this._parseParking(lvl.parking)
 
+        this._minHit = lvl.hits
+        this.canvas.setLimit(this._minHit)
+    }
+
+    _parseField(field) {
+
+        for (let block of field) {
+            this.canvas.addBlock(this._createNewBlock(block))
         }
+
     }
 
-    _level1() {
-        this.canvas.addBlock(new Laser(180, 1, 1, false, false))
-        this.canvas.addBlock(new Target(0, 3, 3, false, true))
-        this.canvas.addParkingBlock(new DoubleMirror(0, 0, 0, true, true))
+    _parseParking(parking) {
 
-        this._minHit = 1
-        this.canvas.setLimit(this._minHit)
+        for (var block of parking) {
+            this.canvas.addParkingBlock(this._createNewBlock(block))
+        }
+
     }
 
-    _level2() {
-        this.canvas.addBlock(new Laser(270, 0, 0, false, true))
-        this.canvas.addBlock(new Target(90, 4, 0, false, true))
-        this.canvas.addBlock(new DoubleMirror(90, 3, 1, false, false))
+    _createNewBlock(block) {
+        switch (block.type) {
+            case "HalfMirror":
+                return new HalfMirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Mirror":
+                return new Mirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "DoubleMirror":
+                return new DoubleMirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Target":
+                return new Target(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "CheckPoint":
+                return new CheckPoint(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Blcoker":
+                return new Blocker(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Laser":
+                return new Laser(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+        }
 
-        this.canvas.addParkingBlock(new Target(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new HalfMirror(0, 0, 0, true, true))
-
-        this._minHit = 2
-        this.canvas.setLimit(this._minHit)
-    }
-
-    _level3() {
-        this.canvas.addBlock(new Laser(90, 1, 2, false, true))
-        this.canvas.addBlock(new Mirror(270, 2, 0, false, true))
-        this.canvas.addBlock(new Mirror(270, 4, 0, false, true))
-        this.canvas.addBlock(new Mirror(0, 3, 2, false, false))
-        this.canvas.addBlock(new DoubleMirror(90, 0, 4, false, false))
-        this.canvas.addBlock(new CheckPoint(0, 4, 3, false, false))
-
-        this.canvas.addParkingBlock(new Mirror(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new Mirror(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new HalfMirror(0, 0, 0, true, true))
-
-        this._minHit = 2
-        this.canvas.setLimit(this._minHit)
     }
 
     _fire() {
@@ -962,6 +955,12 @@ class Game {
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
             if (result.valid) {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
+                this._ajax({
+                    mod: 'post',
+                    url: '/game/report',
+                    postadat: 'status=success&id='+window.location.pathname.split("/")[2],
+                    siker: (xhr, txt) => {this._modal.setUp("Gratulálok", ["Ők is megoldották már: \n\n", txt]); this._modal.show()}
+                })
             } else {
                 let missNumber = parseInt(this._minHit) - parseInt(result.hits)
                 if (missNumber == 0) {
@@ -973,11 +972,52 @@ class Game {
                 }
             }
             this.canvas.drawResult(result.paths)
-        }else {
+        } else {
             this._modal.setUp("Hiba!", ["Minden tükröt kötelezően fel kell használnod!"])
         }
 
         this._modal.show()
+    }
+
+    _ajax(opts) {
+        var mod = opts.mod || 'GET',
+            url = opts.url || '',
+            getadat = opts.getadat || '',
+            postadat = opts.postadat || '',
+            siker = opts.siker || function() {},
+            hiba = opts.hiba || function() {};
+
+        mod = mod.toUpperCase();
+
+        if(this._endsWithPhp(url)){
+            url = url + '?' + getadat;
+        }
+
+        var xhr = new XMLHttpRequest(); // ujXHR();
+        xhr.open(mod, url, true);
+        if (mod === 'POST') {
+            xhr.setRequestHeader('Content-Type',
+                'application/x-www-form-urlencoded');
+        }
+        xhr.addEventListener('readystatechange', function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    siker(xhr, xhr.responseText);
+                } else {
+                    hiba(xhr);
+                }
+            }
+        }, false);
+        xhr.send(mod == 'POST' ? postadat : null);
+        return xhr;
+    }
+
+    _endsWithPhp(url){
+
+        return url[url.length-1] == "p" &&
+                url[url.length-2] == "h" &&
+                url[url.length-3] == "p"
+
     }
 
     _main() {
@@ -1065,7 +1105,7 @@ class MasterBlock {
 
 class CheckPoint extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/ellenorzo.png", heading, x, y, moving, rotating)
+        super("/img/blocks/ellenorzo.png", heading, x, y, moving, rotating)
 
         this._hit = false
     }
@@ -1084,7 +1124,7 @@ class CheckPoint extends MasterBlock {
 
 class Blocker extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/blokkolo.png", heading, x, y, moving, rotating)
+        super("/img/blocks/blokkolo.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(dir) {
@@ -1095,7 +1135,7 @@ class Blocker extends MasterBlock {
 
 class Laser extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/lezer.png", heading, x, y, moving, rotating)
+        super("/img/blocks/lezer.png", heading, x, y, moving, rotating)
     }
 }
 
@@ -1103,7 +1143,7 @@ class Laser extends MasterBlock {
 class Mirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating, imgsrc = null) {
         if (imgsrc === null) {
-            super("img/tukor.png", heading, x, y, moving, rotating)
+            super("/img/blocks/tukor.png", heading, x, y, moving, rotating)
         } else {
             super(imgsrc, heading, x, y, moving, rotating)
         }
@@ -1173,7 +1213,7 @@ class Mirror extends MasterBlock {
 
 class Target extends Mirror {
     constructor(heading, x, y, moving, rotating) {
-        super(heading, x, y, moving, rotating, "img/cel.png")
+        super(heading, x, y, moving, rotating, "/img/blocks/cel.png")
 
         this._hit = false
 
@@ -1188,7 +1228,7 @@ class Target extends Mirror {
 
 class DoubleMirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/dupla.png", heading, x, y, moving, rotating)
+        super("/img/blocks/dupla.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(laserDirection) {
@@ -1244,7 +1284,7 @@ class DoubleMirror extends MasterBlock {
 
 class HalfMirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/felig.png", heading, x, y, moving, rotating)
+        super("/img/blocks/felig.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(dir) {

@@ -1,0 +1,118 @@
+.adminDash .left {
+    float: left;
+    width: 60%;
+    padding: 10px;
+}
+
+.adminDash .right {
+    float: right;
+    width: 35%;
+}
+
+.adminDash table {
+    overflow-x: auto;
+}
+
+.adminDash table th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.adminDash table th.name {
+    width: 100px;
+}
+
+.adminDash .left form {
+    width: 90%;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.33);
+    -moz-box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.33);
+    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.33);
+}
+
+.adminDash .left form>* {
+    margin-top: 10px;
+}
+
+.adminDash .left form input {
+    width: 95%;
+    height: 45px;
+    outline: none;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    border-radius: 2px;
+    color: #333;
+    font-size: 0.8rem;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+}
+
+.adminDash .left form input[type=submit] {
+    width: 50%;
+    background-color: #1CB94E;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 14px 0;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+
+.adminDash .left form textarea {
+    width: 95%;
+    height: 450px;
+    outline: none;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    border-radius: 2px;
+    color: #333;
+    font-size: 0.8rem;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+}
+
+.adminDash .left form div.lvl {
+    display: inline-flex;
+    width: 95%
+}
+
+.adminDash .left form div.lvl-raw {
+    width: 50%;
+    padding-right: 20px;
+}
+
+.adminDash .left form div.lvl-helper {
+    border: 2px solid #1162CB;
+    border-radius: 5px;
+    padding: 10px;
+    width: 50%;
+}
+
+.adminDash .left form div.lvl-helper input {
+    width: 150px;
+}
+
+.adminDash .left form div.lvl-helper input[type=checkbox] {
+    width: auto;
+    height: 30px;
+}
+
+.adminDash .left form div.lvl-helper select {
+    width: 100%;
+    height: 45px;
+    outline: none;
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    border-radius: 2px;
+    color: #333;
+    font-size: 0.8rem;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+}

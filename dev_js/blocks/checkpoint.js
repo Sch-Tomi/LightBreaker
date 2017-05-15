@@ -1,6 +1,6 @@
 class CheckPoint extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/ellenorzo.png", heading, x, y, moving, rotating)
+        super("/img/blocks/ellenorzo.png", heading, x, y, moving, rotating)
 
         this._hit = false
     }

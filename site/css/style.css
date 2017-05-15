@@ -28,7 +28,7 @@ h1, h2, h3, h4, h5, h6 {
     color: #1162CB;
     text-shadow: 0px 1px 0px #CCC;
     letter-spacing: -1px;
-    margin: 0 0 10px 0;
+    margin: 0 0 5px 0;
 }
 
 h2 {
@@ -88,6 +88,18 @@ ol li {
     background: transparent;
 }
 
+#main_content {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+#main_content.sidebar_on {
+    float: left;
+    width: 65%;
+}
+
 #menubar {
     width: 1100px;
     height: 50px;
@@ -106,12 +118,11 @@ ol li {
     vertical-align: middle;
 }
 
-#welcome img{
+#welcome img {
     vertical-align: middle;
-
 }
 
-#welcome  a {
+#welcome a {
     font: normal 150% Arial, Helvetica, sans-serif;
     color: #FFF;
     text-decoration: none;
@@ -157,23 +168,30 @@ ul#menu li.current a, ul#menu li:hover a {
     width: 1100px;
     overflow: hidden;
     margin: 0 auto;
-    padding: 0 0 0px 20px;
+    padding: 0 20px 0px 20px;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 15px 15px 15px 15px;
     -moz-border-radius: 15px 15px 15px 15px;
     -webkit-border: 15px 15px 15px 15px;
 }
 
+.sidebar-content {
+    padding: 10px;
+}
+
 .sidebar_container {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
     float: right;
     margin: 10px 20px 0 20px;
-    width: 220px;
-    padding: 0;
+    width: 25%;
 }
 
 .sidebar {
     float: left;
-    width: 220px;
+    width: 100%;
     padding: 0;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -181,7 +199,7 @@ ul#menu li.current a, ul#menu li:hover a {
 
 .sidebar_item {
     font: normal 100% Arial, Helvetica, sans-serif;
-    width: 215px;
+    width: 100%;
 }
 
 .sidebar h2 {
@@ -269,12 +287,10 @@ ul#menu li.current a, ul#menu li:hover a {
 
 #footer {
     width: 960px;
-
     padding-top: 20px;
     text-align: center;
     background: transparent;
     color: #000;
-
     display: block;
 }
 
@@ -384,6 +400,8 @@ ul#menu li.current a, ul#menu li:hover a {
     box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
     color: #000;
 }
+
+
 /*
 .fireBtn {
   display:block;
@@ -396,36 +414,51 @@ ul#menu li.current a, ul#menu li:hover a {
 }*/
 
 .fireBtn {
-
-	box-shadow:inset 0px 1px 0px 0px #f29c93;
-	background:linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
-	background-color:#fe1a00;
-	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	border-radius:50%;
-	border:1px solid #d83526;
+    box-shadow: inset 0px 1px 0px 0px #f29c93;
+    background: linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
+    background-color: #fe1a00;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 50%;
+    border: 1px solid #d83526;
     width: 75px;
     height: 75px;
-	display:block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:15px;
-	font-weight:bold;
-	padding:6px 24px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #b23e35;
-}
-.fireBtn:hover {
-	background:linear-gradient(to bottom, #ce0100 5%, #fe1a00 100%);
-	background-color:#ce0100;
-}
-.fireBtn:active {
-	position:relative;
-	top:1px;
+    display: block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 6px 24px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #b23e35;
+    margin: auto;
 }
 
-#footer img{
+.fireBtn:hover {
+    background: linear-gradient(to bottom, #ce0100 5%, #fe1a00 100%);
+    background-color: #ce0100;
+}
+
+.fireBtn:active {
+    position: relative;
+    top: 1px;
+}
+
+.controll-help {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.33);
+    -moz-box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.33);
+    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.33);
+}
+
+.controll-help p {
+    text-align: justify;
+}
+
+#footer img {
     width: 5%;
     vertical-align: middle;
 }
