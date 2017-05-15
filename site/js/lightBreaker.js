@@ -73,86 +73,6 @@ class Parking {
 }
 
 
-class Modal {
-    constructor() {
-        this._text = ""
-        this._header = ""
-
-        this._createModal()
-        //this.show()
-    }
-
-    setUp(newHeader, newText){
-
-        this._text = ""
-
-        for (let text of newText) {
-            this._text += "<p>"+text+"</p>"
-        }
-
-        this._header = newHeader
-    }
-
-    _createModal(){
-
-        let modal = document.createElement('div')
-        modal.id = "messageModal"
-        modal.className = "modal"
-
-        let content = document.createElement('div')
-        content.id = "messageModal-content"
-        content.className = "modal-content"
-
-        let header = document.createElement('div')
-        header.className = "modal-header"
-        header.innerHTML += '<span id="messageModal-close" class="close">&times;</span>'
-        header.innerHTML += '<h2 id="messageModal-header"></h2>'
-
-        let body = document.createElement('div')
-        body.className = "modal-body"
-        body.id = "messageModal-body"
-
-        content.appendChild(header)
-        content.appendChild(body)
-        modal.appendChild(content)
-
-        document.body.appendChild(modal)
-
-        document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
-
-
-    }
-
-    hide(){
-
-        document.querySelector('#messageModal').style.webkitAnimationName = 'fadeOut'
-        document.querySelector('#messageModal-content').style.webkitAnimationName = 'slideOut'
-
-        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
-            document.querySelector('#messageModal').style.display = "none";
-        })
-
-
-    }
-
-    show(){
-
-        document.querySelector('#messageModal').style.animationName = 'fadeIn'
-        document.querySelector('#messageModal-content').style.animationName = 'slideIn'
-
-        document.querySelector('#messageModal-header').innerHTML = this._header
-        document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
-        document.querySelector('#messageModal').style.display = "block";
-
-        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
-            document.querySelector('#messageModal').style.display = "block";
-        })
-
-        setTimeout(() => {this.hide()}, 3000);
-    }
-}
-
-
 class LaserPathDrawing {
 
     constructor(table_dimension, table_row_num, table_col_num, table_padding, cell_dimension) {
@@ -331,6 +251,36 @@ class LaserPathDrawing {
 }
 
 
+class GameBoard {
+    constructor(context, cellDimension, boardDimension, tablePadding) {
+        this._context = context
+        this._cellDimension = cellDimension
+        this._boardDimension = boardDimension
+        this._tablePadding = tablePadding
+    }
+
+    render() {
+        this._context.beginPath()
+
+        for (var x = 0; x <= this._boardDimension; x += this._cellDimension) {
+            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
+            this._context.lineTo(0.5 + x + this._tablePadding, this._boardDimension + this._tablePadding)
+        }
+
+        for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
+            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
+            this._context.lineTo(this._boardDimension + this._tablePadding, 0.5 + y + this._tablePadding);
+        }
+
+        this._context.lineWidth = 1
+        this._context.strokeStyle = "black"
+        this._context.stroke()
+    }
+
+
+}
+
+
 class Canvas {
     constructor() {
         this._createCanvas()
@@ -348,7 +298,7 @@ class Canvas {
 
 
         this._lock = new Image()
-        this._lock.src = "/img/lock.png"
+        this._lock.src = "/img/blocks/lock.png"
 
         this._gameBoard = new GameBoard(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
         this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
@@ -661,33 +611,115 @@ class HitCounter {
 }
 
 
-class GameBoard {
-    constructor(context, cellDimension, boardDimension, tablePadding) {
-        this._context = context
-        this._cellDimension = cellDimension
-        this._boardDimension = boardDimension
-        this._tablePadding = tablePadding
+class Modal {
+    constructor() {
+        this._text = ""
+        this._header = ""
+
+        this._createModal()
+        //this.show()
     }
 
-    render() {
-        this._context.beginPath()
+    setUp(newHeader, newText){
 
-        for (var x = 0; x <= this._boardDimension; x += this._cellDimension) {
-            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
-            this._context.lineTo(0.5 + x + this._tablePadding, this._boardDimension + this._tablePadding)
+        this._text = ""
+
+        for (let text of newText) {
+            this._text += "<p>"+text+"</p>"
         }
 
-        for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
-            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
-            this._context.lineTo(this._boardDimension + this._tablePadding, 0.5 + y + this._tablePadding);
-        }
-
-        this._context.lineWidth = 1
-        this._context.strokeStyle = "black"
-        this._context.stroke()
+        this._header = newHeader
     }
 
+    _createModal(){
 
+        let modal = document.createElement('div')
+        modal.id = "messageModal"
+        modal.className = "modal"
+
+        let content = document.createElement('div')
+        content.id = "messageModal-content"
+        content.className = "modal-content"
+
+        let header = document.createElement('div')
+        header.className = "modal-header"
+        header.innerHTML += '<span id="messageModal-close" class="close">&times;</span>'
+        header.innerHTML += '<h2 id="messageModal-header"></h2>'
+
+        let body = document.createElement('div')
+        body.className = "modal-body"
+        body.id = "messageModal-body"
+
+        content.appendChild(header)
+        content.appendChild(body)
+        modal.appendChild(content)
+
+        document.body.appendChild(modal)
+
+        document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
+
+
+    }
+
+    hide(){
+
+        document.querySelector('#messageModal').style.webkitAnimationName = 'fadeOut'
+        document.querySelector('#messageModal-content').style.webkitAnimationName = 'slideOut'
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "none";
+        })
+
+
+    }
+
+    show(){
+
+        document.querySelector('#messageModal').style.animationName = 'fadeIn'
+        document.querySelector('#messageModal-content').style.animationName = 'slideIn'
+
+        document.querySelector('#messageModal-header').innerHTML = this._header
+        document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
+        document.querySelector('#messageModal').style.display = "block";
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "block";
+        })
+
+        setTimeout(() => {this.hide()}, 3000);
+    }
+}
+
+
+class Position {
+    constructor(row, col, direction) {
+        this.row = row
+        this.col = col
+        this.direction = direction
+    }
+}
+
+
+class Path {
+    constructor() {
+        this._path = []
+    }
+
+    push(element) {
+        this._path.push(element)
+    }
+
+    get length(){
+        return this._path.length
+    }
+
+    get_last() {
+        return this._path[this._path.length - 1]
+    }
+
+    get_path() {
+        return this._path
+    }
 }
 
 
@@ -821,38 +853,6 @@ class LaserPathCalculator {
 }
 
 
-class Position {
-    constructor(row, col, direction) {
-        this.row = row
-        this.col = col
-        this.direction = direction
-    }
-}
-
-
-class Path {
-    constructor() {
-        this._path = []
-    }
-
-    push(element) {
-        this._path.push(element)
-    }
-
-    get length(){
-        return this._path.length
-    }
-
-    get_last() {
-        return this._path[this._path.length - 1]
-    }
-
-    get_path() {
-        return this._path
-    }
-}
-
-
 class Game {
     constructor() {
         this.canvas = new Canvas()
@@ -955,6 +955,11 @@ class Game {
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
             if (result.valid) {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
+                this._ajax({
+                    mod: 'post',
+                    url: '/game/report',
+                    postadat: 'status=success&id='+window.location.pathname.split("/")[2],
+                })
             } else {
                 let missNumber = parseInt(this._minHit) - parseInt(result.hits)
                 if (missNumber == 0) {
@@ -971,6 +976,47 @@ class Game {
         }
 
         this._modal.show()
+    }
+
+    _ajax(opts) {
+        var mod = opts.mod || 'GET',
+            url = opts.url || '',
+            getadat = opts.getadat || '',
+            postadat = opts.postadat || '',
+            siker = opts.siker || function() {},
+            hiba = opts.hiba || function() {};
+
+        mod = mod.toUpperCase();
+
+        if(this._endsWithPhp(url)){
+            url = url + '?' + getadat;
+        }
+
+        var xhr = new XMLHttpRequest(); // ujXHR();
+        xhr.open(mod, url, true);
+        if (mod === 'POST') {
+            xhr.setRequestHeader('Content-Type',
+                'application/x-www-form-urlencoded');
+        }
+        xhr.addEventListener('readystatechange', function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    siker(xhr, xhr.responseText);
+                } else {
+                    hiba(xhr);
+                }
+            }
+        }, false);
+        xhr.send(mod == 'POST' ? postadat : null);
+        return xhr;
+    }
+
+    _endsWithPhp(url){
+
+        return url[url.length-1] == "p" &&
+                url[url.length-2] == "h" &&
+                url[url.length-3] == "p"
+
     }
 
     _main() {

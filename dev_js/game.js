@@ -100,6 +100,11 @@ class Game {
             var result = new LaserPathCalculator(this.canvas.get_board(), this._minHit)
             if (result.valid) {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
+                this._ajax({
+                    mod: 'post',
+                    url: '/game/report',
+                    postadat: 'status=success&id='+window.location.pathname.split("/")[2],
+                })
             } else {
                 let missNumber = parseInt(this._minHit) - parseInt(result.hits)
                 if (missNumber == 0) {
@@ -116,6 +121,47 @@ class Game {
         }
 
         this._modal.show()
+    }
+
+    _ajax(opts) {
+        var mod = opts.mod || 'GET',
+            url = opts.url || '',
+            getadat = opts.getadat || '',
+            postadat = opts.postadat || '',
+            siker = opts.siker || function() {},
+            hiba = opts.hiba || function() {};
+
+        mod = mod.toUpperCase();
+
+        if(this._endsWithPhp(url)){
+            url = url + '?' + getadat;
+        }
+
+        var xhr = new XMLHttpRequest(); // ujXHR();
+        xhr.open(mod, url, true);
+        if (mod === 'POST') {
+            xhr.setRequestHeader('Content-Type',
+                'application/x-www-form-urlencoded');
+        }
+        xhr.addEventListener('readystatechange', function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    siker(xhr, xhr.responseText);
+                } else {
+                    hiba(xhr);
+                }
+            }
+        }, false);
+        xhr.send(mod == 'POST' ? postadat : null);
+        return xhr;
+    }
+
+    _endsWithPhp(url){
+
+        return url[url.length-1] == "p" &&
+                url[url.length-2] == "h" &&
+                url[url.length-3] == "p"
+
     }
 
     _main() {

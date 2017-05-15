@@ -3,11 +3,13 @@
     class GameModel{
 
         private $db;
+        private $auht;
         private $libMan;
 
         public function __construct(){
             $this->libMan = new LibManager;
             $this->db = $this->libMan->load_and_create("DataBase");
+            $this->auth = $this->libMan->load_and_create("AuthenticationLib");
         }
 
         public function get($id){
@@ -15,7 +17,20 @@
         }
 
         public function get_games(){
-            return $this->db->select(array("id", "name", "difficult" ))->from("games")->execute();
+            $games_incomplete = $this->db->select(array("id", "name", "difficult" ))->from("games")->execute();
+            $games = array();
+            foreach ($games_incomplete as $game) {
+                $game["solves"] = count($this->db->select("*")->from("success")->where("game_id == ".$game["id"])->execute());
+                if ($this->auth->is_logged()) {
+                    $game["user_solved"] = count($this->db->select("*")->from("success")->where("game_id == ".$game["id"]." AND user_id == ".$this->auth->get_data_from_logged_user("id"))->execute()) > 0;
+                } else {
+                    $game["user_solved"] = false;
+                }
+
+                $games[] = $game;
+            }
+
+            return $games;
         }
 
         public function add($newLvl) {
@@ -32,6 +47,18 @@
             $newLvl["parking"] = $newLvlObj["parking"];
 
             $this->db->insert_into("games")->values($newLvl)->execute();
+        }
+
+        public function del($id){
+            $this->db->delete()->from("games")->where("id == ".$id)->execute();
+        }
+
+        public function report($game_id, $status)
+        {
+            if(isset($game_id) && isset($status) && $this->auth->is_logged() && $status == "success"){
+                $this->db->insert_into("success")->values(array('user_id' => $this->auth->get_data_from_logged_user("id"),
+                                                                'game_id' => $game_id))->execute();
+            }
         }
 
         private function strip_data($data){

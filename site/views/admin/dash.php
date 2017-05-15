@@ -87,7 +87,7 @@
                     <tr>
                         <td><a href="/game/<?php echo $game["id"];?> "><?php echo $game["name"] ?></a></td>
                         <td><?php echo $game["difficult"] ?></td>
-                        <td></td>
+                        <td><?php echo $game["solves"] ?></td>
                         <td><a href="/admin/delete/<?php echo $game["id"];?>"><img src="/img/Letter-X-icon.png" alt="Delete"></a></td>
                     </tr>
                     <?php

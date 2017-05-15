@@ -1,6 +1,9 @@
 <?php
     $this->load_lib("AuthenticationLib");
+    $this->load_lib("MenuHelperLib");
+
     $auth = $this->lib("AuthenticationLib");
+    $helper = $this->lib("MenuHelperLib");
 ?>
 
 
@@ -12,17 +15,17 @@
     <!--close welcome-->
     <div id="menu_items">
         <ul id="menu">
-            <li class="current"><a href="/">Főoldal</a></li>
-            <li class=""><a href="/game">Játék</a></li>
+            <li class="<?php echo $helper->get_menu_item_class("/"); ?>"><a href="/">Főoldal</a></li>
+            <li class="<?php echo $helper->get_menu_item_class("/game"); ?>"><a href="/game">Játék</a></li>
             <?php if ($auth->is_logged()) :?>
-                <li class=""><a href="/logout">Kijelentkezés</a></li>
+                <li class="<?php echo $helper->get_menu_item_class("/logout"); ?>"><a href="/logout">Kijelentkezés</a></li>
             <?php else: ?>
-                <li class=""><a href="/login">Bejelentkezés</a></li>
-                <li class=""><a href="/register">Regisztráció</a></li>
+                <li class="<?php echo $helper->get_menu_item_class("/login"); ?>"><a href="/login">Bejelentkezés</a></li>
+                <li class="<?php echo $helper->get_menu_item_class("/register"); ?>"><a href="/register">Regisztráció</a></li>
             <?php endif; ?>
 
             <?php if ($auth->is_admin()): ?>
-                <li class=""><a href="/admin">Admin DashBoard</a></li>
+                <li class="<?php echo $helper->get_menu_item_class("/admin"); ?>"><a href="/admin">Admin DashBoard</a></li>
             <?php endif; ?>
         </ul>
     </div>

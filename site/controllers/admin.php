@@ -32,6 +32,11 @@
             $this->redirect("/admin");
         }
 
+        public function del($id){
+            $this->gameModel->del($id);
+            $this->redirect("/admin");
+        }
+
         private function authoritization(){
             if (!$this->authLib->is_admin()) {
                 $this->redirect("/error/403");

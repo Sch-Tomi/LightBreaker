@@ -1,0 +1,10 @@
+{
+    "structure": {
+        "id": "int",
+        "user_id": "int",
+        "game_id": "string"
+    },
+    "data": [
+
+    ]
+}

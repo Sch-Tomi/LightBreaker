@@ -14,6 +14,7 @@
 
     $this->route['GET']['/game'] = "Game/show_games";
     $this->route['GET']['/game/(:num)'] = "Game/start";
+    $this->route['POST']['/game/report'] = "Game/report";
 
     $this->route['GET']['/login'] = "Auth/login";
     $this->route['POST']['/login'] = "Auth/do_login";

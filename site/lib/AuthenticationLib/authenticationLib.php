@@ -29,6 +29,7 @@
             if(count($search) == 1){
                 $this->safety_start_session();
                 $_SESSION['username'] = $email;
+                $_SESSION['id'] = $search[0]["id"];
                 $_SESSION['admin'] = ($email == "admin@admin.hu");
                 return true;
             }
@@ -49,6 +50,16 @@
             $this->safety_start_session();
             unset($_SESSION["username"]);
             unset($_SESSION["admin"]);
+        }
+
+        public function get_data_from_logged_user($data)
+        {
+            if ($this->is_logged()) {
+                $this->safety_start_session();
+                $search = $this->db->from("user")->select("*")->where("email == ".$_SESSION["username"])->execute();
+                return $search[0][$data];
+            }
+            return false;
         }
 
         private function hash_pw($pw) {

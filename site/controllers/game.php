@@ -17,8 +17,6 @@
             $this->view->add_style("/css/welcome.css");
             $this->view->add_style("/css/login.css");
 
-
-
             $this->view->add_section("menu", "sections/menu");
             $this->view->add_section("footer", "sections/footer");
         }
@@ -34,6 +32,12 @@
             $this->view->add_script("/js/lightBreaker.js");
             $this->view->add_section("sidebar", "sections/game-sidebar");
             $this->view->show("game", array('game-data' => json_encode($this->gameModel->get($id))));
+        }
+
+        public function report()
+        {
+            echo "Contorller OK";
+            $this->gameModel->report($_POST["id"], $_POST["status"]);
         }
     }
 
