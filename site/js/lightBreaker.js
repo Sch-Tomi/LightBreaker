@@ -73,6 +73,86 @@ class Parking {
 }
 
 
+class Modal {
+    constructor() {
+        this._text = ""
+        this._header = ""
+
+        this._createModal()
+        //this.show()
+    }
+
+    setUp(newHeader, newText){
+
+        this._text = ""
+
+        for (let text of newText) {
+            this._text += "<p>"+text+"</p>"
+        }
+
+        this._header = newHeader
+    }
+
+    _createModal(){
+
+        let modal = document.createElement('div')
+        modal.id = "messageModal"
+        modal.className = "modal"
+
+        let content = document.createElement('div')
+        content.id = "messageModal-content"
+        content.className = "modal-content"
+
+        let header = document.createElement('div')
+        header.className = "modal-header"
+        header.innerHTML += '<span id="messageModal-close" class="close">&times;</span>'
+        header.innerHTML += '<h2 id="messageModal-header"></h2>'
+
+        let body = document.createElement('div')
+        body.className = "modal-body"
+        body.id = "messageModal-body"
+
+        content.appendChild(header)
+        content.appendChild(body)
+        modal.appendChild(content)
+
+        document.body.appendChild(modal)
+
+        document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
+
+
+    }
+
+    hide(){
+
+        document.querySelector('#messageModal').style.webkitAnimationName = 'fadeOut'
+        document.querySelector('#messageModal-content').style.webkitAnimationName = 'slideOut'
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "none";
+        })
+
+
+    }
+
+    show(){
+
+        document.querySelector('#messageModal').style.animationName = 'fadeIn'
+        document.querySelector('#messageModal-content').style.animationName = 'slideIn'
+
+        document.querySelector('#messageModal-header').innerHTML = this._header
+        document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
+        document.querySelector('#messageModal').style.display = "block";
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "block";
+        })
+
+        setTimeout(() => {this.hide()}, 3000);
+    }
+}
+
+
 class LaserPathDrawing {
 
     constructor(table_dimension, table_row_num, table_col_num, table_padding, cell_dimension) {
@@ -251,36 +331,6 @@ class LaserPathDrawing {
 }
 
 
-class GameBoard {
-    constructor(context, cellDimension, boardDimension, tablePadding) {
-        this._context = context
-        this._cellDimension = cellDimension
-        this._boardDimension = boardDimension
-        this._tablePadding = tablePadding
-    }
-
-    render() {
-        this._context.beginPath()
-
-        for (var x = 0; x <= this._boardDimension; x += this._cellDimension) {
-            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
-            this._context.lineTo(0.5 + x + this._tablePadding, this._boardDimension + this._tablePadding)
-        }
-
-        for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
-            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
-            this._context.lineTo(this._boardDimension + this._tablePadding, 0.5 + y + this._tablePadding);
-        }
-
-        this._context.lineWidth = 1
-        this._context.strokeStyle = "black"
-        this._context.stroke()
-    }
-
-
-}
-
-
 class Canvas {
     constructor() {
         this._createCanvas()
@@ -298,7 +348,7 @@ class Canvas {
 
 
         this._lock = new Image()
-        this._lock.src = "img/lock.png"
+        this._lock.src = "/img/lock.png"
 
         this._gameBoard = new GameBoard(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
         this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
@@ -611,115 +661,33 @@ class HitCounter {
 }
 
 
-class Modal {
-    constructor() {
-        this._text = ""
-        this._header = ""
-
-        this._createModal()
-        //this.show()
+class GameBoard {
+    constructor(context, cellDimension, boardDimension, tablePadding) {
+        this._context = context
+        this._cellDimension = cellDimension
+        this._boardDimension = boardDimension
+        this._tablePadding = tablePadding
     }
 
-    setUp(newHeader, newText){
+    render() {
+        this._context.beginPath()
 
-        this._text = ""
-
-        for (let text of newText) {
-            this._text += "<p>"+text+"</p>"
+        for (var x = 0; x <= this._boardDimension; x += this._cellDimension) {
+            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
+            this._context.lineTo(0.5 + x + this._tablePadding, this._boardDimension + this._tablePadding)
         }
 
-        this._header = newHeader
+        for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
+            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
+            this._context.lineTo(this._boardDimension + this._tablePadding, 0.5 + y + this._tablePadding);
+        }
+
+        this._context.lineWidth = 1
+        this._context.strokeStyle = "black"
+        this._context.stroke()
     }
 
-    _createModal(){
 
-        let modal = document.createElement('div')
-        modal.id = "messageModal"
-        modal.className = "modal"
-
-        let content = document.createElement('div')
-        content.id = "messageModal-content"
-        content.className = "modal-content"
-
-        let header = document.createElement('div')
-        header.className = "modal-header"
-        header.innerHTML += '<span id="messageModal-close" class="close">&times;</span>'
-        header.innerHTML += '<h2 id="messageModal-header"></h2>'
-
-        let body = document.createElement('div')
-        body.className = "modal-body"
-        body.id = "messageModal-body"
-
-        content.appendChild(header)
-        content.appendChild(body)
-        modal.appendChild(content)
-
-        document.body.appendChild(modal)
-
-        document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
-
-
-    }
-
-    hide(){
-
-        document.querySelector('#messageModal').style.webkitAnimationName = 'fadeOut'
-        document.querySelector('#messageModal-content').style.webkitAnimationName = 'slideOut'
-
-        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
-            document.querySelector('#messageModal').style.display = "none";
-        })
-
-
-    }
-
-    show(){
-
-        document.querySelector('#messageModal').style.animationName = 'fadeIn'
-        document.querySelector('#messageModal-content').style.animationName = 'slideIn'
-
-        document.querySelector('#messageModal-header').innerHTML = this._header
-        document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
-        document.querySelector('#messageModal').style.display = "block";
-
-        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
-            document.querySelector('#messageModal').style.display = "block";
-        })
-
-        setTimeout(() => {this.hide()}, 3000);
-    }
-}
-
-
-class Position {
-    constructor(row, col, direction) {
-        this.row = row
-        this.col = col
-        this.direction = direction
-    }
-}
-
-
-class Path {
-    constructor() {
-        this._path = []
-    }
-
-    push(element) {
-        this._path.push(element)
-    }
-
-    get length(){
-        return this._path.length
-    }
-
-    get_last() {
-        return this._path[this._path.length - 1]
-    }
-
-    get_path() {
-        return this._path
-    }
 }
 
 
@@ -853,38 +821,65 @@ class LaserPathCalculator {
 }
 
 
+class Position {
+    constructor(row, col, direction) {
+        this.row = row
+        this.col = col
+        this.direction = direction
+    }
+}
+
+
+class Path {
+    constructor() {
+        this._path = []
+    }
+
+    push(element) {
+        this._path.push(element)
+    }
+
+    get length(){
+        return this._path.length
+    }
+
+    get_last() {
+        return this._path[this._path.length - 1]
+    }
+
+    get_path() {
+        return this._path
+    }
+}
+
+
 class Game {
     constructor() {
         this.canvas = new Canvas()
         this.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
 
         this._setInteface()
-        this._precentRightClick()
+        this._preventRightClick()
 
         this._minHit = 0
 
+        this._lvl_data = ""
+
+    }
+
+    setLvl(data) {
+        this._lvl_data = data;
     }
 
     run() {
         // Let's play this game!
+        this._parseLvl();
         this._main();
     }
 
     _setInteface() {
 
         this._modal = new Modal()
-
-        this.selector = document.createElement("select")
-        this.selector.id = "lvlSelect"
-        this.selector.innerHTML += "<option disabled selected value> -- válassz egy pályát -- </option>"
-        this.selector.innerHTML += "<option value='1'>Level 1</option>"
-        this.selector.innerHTML += "<option value='2'>Level 2</option>"
-        this.selector.innerHTML += "<option value='3'>Level 3</option>"
-
-        document.body.querySelector("#lightBreaker-lvlSelector").appendChild(this.selector)
-        this.selector.onchange = () => {
-            this._levelSelect()
-        }
 
         this.fireButton = document.createElement('button')
         this.fireButton.textContent = 'Tűz!'
@@ -897,64 +892,62 @@ class Game {
         }
     }
 
-    _precentRightClick() {
+    _preventRightClick() {
         document.body.oncontextmenu = () => {
             return false
         }
     }
 
-    _levelSelect() {
-        this.canvas.clear()
-        switch (parseInt(this.selector.options[this.selector.selectedIndex].value)) {
-            case 1:
-                this._level1()
-                break;
-            case 2:
-                this._level2()
-                break;
-            case 3:
-                this._level3()
-                break;
-            default:
+    _parseLvl() {
+        let lvl = this._lvl_data[0]
+        this._parseField(lvl.field)
+        this._parseParking(lvl.parking)
 
+        this._minHit = lvl.hits
+        this.canvas.setLimit(this._minHit)
+    }
+
+    _parseField(field) {
+
+        for (let block of field) {
+            this.canvas.addBlock(this._createNewBlock(block))
         }
+
     }
 
-    _level1() {
-        this.canvas.addBlock(new Laser(180, 1, 1, false, false))
-        this.canvas.addBlock(new Target(0, 3, 3, false, true))
-        this.canvas.addParkingBlock(new DoubleMirror(0, 0, 0, true, true))
+    _parseParking(parking) {
 
-        this._minHit = 1
-        this.canvas.setLimit(this._minHit)
+        for (var block of parking) {
+            this.canvas.addParkingBlock(this._createNewBlock(block))
+        }
+
     }
 
-    _level2() {
-        this.canvas.addBlock(new Laser(270, 0, 0, false, true))
-        this.canvas.addBlock(new Target(90, 4, 0, false, true))
-        this.canvas.addBlock(new DoubleMirror(90, 3, 1, false, false))
+    _createNewBlock(block) {
+        switch (block.type) {
+            case "HalfMirror":
+                return new HalfMirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Mirror":
+                return new Mirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "DoubleMirror":
+                return new DoubleMirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Target":
+                return new Target(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "CheckPoint":
+                return new CheckPoint(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Blcoker":
+                return new Blocker(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Laser":
+                return new Laser(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+        }
 
-        this.canvas.addParkingBlock(new Target(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new HalfMirror(0, 0, 0, true, true))
-
-        this._minHit = 2
-        this.canvas.setLimit(this._minHit)
-    }
-
-    _level3() {
-        this.canvas.addBlock(new Laser(90, 1, 2, false, true))
-        this.canvas.addBlock(new Mirror(270, 2, 0, false, true))
-        this.canvas.addBlock(new Mirror(270, 4, 0, false, true))
-        this.canvas.addBlock(new Mirror(0, 3, 2, false, false))
-        this.canvas.addBlock(new DoubleMirror(90, 0, 4, false, false))
-        this.canvas.addBlock(new CheckPoint(0, 4, 3, false, false))
-
-        this.canvas.addParkingBlock(new Mirror(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new Mirror(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new HalfMirror(0, 0, 0, true, true))
-
-        this._minHit = 2
-        this.canvas.setLimit(this._minHit)
     }
 
     _fire() {
@@ -973,7 +966,7 @@ class Game {
                 }
             }
             this.canvas.drawResult(result.paths)
-        }else {
+        } else {
             this._modal.setUp("Hiba!", ["Minden tükröt kötelezően fel kell használnod!"])
         }
 
@@ -1065,7 +1058,7 @@ class MasterBlock {
 
 class CheckPoint extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/ellenorzo.png", heading, x, y, moving, rotating)
+        super("/img/blocks/ellenorzo.png", heading, x, y, moving, rotating)
 
         this._hit = false
     }
@@ -1084,7 +1077,7 @@ class CheckPoint extends MasterBlock {
 
 class Blocker extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/blokkolo.png", heading, x, y, moving, rotating)
+        super("/img/blocks/blokkolo.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(dir) {
@@ -1095,7 +1088,7 @@ class Blocker extends MasterBlock {
 
 class Laser extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/lezer.png", heading, x, y, moving, rotating)
+        super("/img/blocks/lezer.png", heading, x, y, moving, rotating)
     }
 }
 
@@ -1103,7 +1096,7 @@ class Laser extends MasterBlock {
 class Mirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating, imgsrc = null) {
         if (imgsrc === null) {
-            super("img/tukor.png", heading, x, y, moving, rotating)
+            super("/img/blocks/tukor.png", heading, x, y, moving, rotating)
         } else {
             super(imgsrc, heading, x, y, moving, rotating)
         }
@@ -1173,7 +1166,7 @@ class Mirror extends MasterBlock {
 
 class Target extends Mirror {
     constructor(heading, x, y, moving, rotating) {
-        super(heading, x, y, moving, rotating, "img/cel.png")
+        super(heading, x, y, moving, rotating, "/img/blocks/cel.png")
 
         this._hit = false
 
@@ -1188,7 +1181,7 @@ class Target extends Mirror {
 
 class DoubleMirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/dupla.png", heading, x, y, moving, rotating)
+        super("/img/blocks/dupla.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(laserDirection) {
@@ -1244,7 +1237,7 @@ class DoubleMirror extends MasterBlock {
 
 class HalfMirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("img/felig.png", heading, x, y, moving, rotating)
+        super("/img/blocks/felig.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(dir) {

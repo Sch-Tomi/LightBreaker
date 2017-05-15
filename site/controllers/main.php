@@ -8,10 +8,10 @@
 
             $this->view->set_template("basic");
 
-            $this->view->add_style("css/style.css");
-            $this->view->add_style("css/modal.css");
-            $this->view->add_style("css/welcome.css");
-            $this->view->add_style("css/login.css");
+            $this->view->add_style("/css/style.css");
+            $this->view->add_style("/css/modal.css");
+            $this->view->add_style("/css/welcome.css");
+            $this->view->add_style("/css/login.css");
 
 
 
@@ -22,12 +22,6 @@
         public function index(){
             $this->view->add_section("sidebar", "sections/sidebar");
             $this->view->show("welcome");
-        }
-
-        public function game(){
-            $this->view->add_script("js/lightBreaker.js");
-            $this->view->add_section("sidebar", "sections/game-sidebar");
-            $this->view->show("game");
         }
 
     }

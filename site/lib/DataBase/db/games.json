@@ -2,12 +2,15 @@
     "structure": {
         "id": "int",
         "name": "string",
+        "difficult": "string",
         "hits": "int",
-        "field": "JSON"
+        "field": "JSON",
+        "parking": "JSON"
     },
     "data": [{
         "id": 1,
         "name": "Level 1",
+        "difficult": "Könnyű",
         "hits": 1,
         "field": [{
             "type": "Laser",
@@ -35,6 +38,7 @@
     }, {
         "id": 2,
         "name": "Level 2",
+        "difficult": "Közepes",
         "hits": 2,
         "field": [{
             "type": "Laser",
@@ -76,6 +80,7 @@
     }, {
         "id": 3,
         "name": "Level 3",
+        "difficult": "Nehéz",
         "hits": 2,
         "field": [{
             "type": "Laser",

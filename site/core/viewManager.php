@@ -9,6 +9,8 @@
 
         private $libMan;
 
+        private $data;
+
         public function __construct()
         {
             $this->sections = array();
@@ -17,6 +19,8 @@
 
             $this->loads = array();
             $this->libMan = new LibManager;
+
+            $data = NULL;
         }
 
         public function set_template($template){
@@ -36,8 +40,8 @@
         }
 
         public function show($view, $data=''){
+            $this->data = $data;
             require_once __DIR__."/../views/templates/".$this->template.".php";
-
         }
 
         public function load_lib($name){
@@ -73,7 +77,8 @@
         }
 
         protected function get_view($name){
-            return file_get_contents(__DIR__."/../views/".$name.".php");
+            $data = $this->data;
+            require __DIR__."/../views/".$name.".php";
         }
 
     }

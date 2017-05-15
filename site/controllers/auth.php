@@ -11,10 +11,10 @@
 
             $this->view->set_template("basic");
 
-            $this->view->add_style("css/style.css");
-            $this->view->add_style("css/modal.css");
-            $this->view->add_style("css/welcome.css");
-            $this->view->add_style("css/login.css");
+            $this->view->add_style("/css/style.css");
+            $this->view->add_style("/css/modal.css");
+            $this->view->add_style("/css/welcome.css");
+            $this->view->add_style("/css/login.css");
 
             $this->view->add_section("menu", "sections/menu");
             $this->view->add_section("footer", "sections/footer");
@@ -29,7 +29,7 @@
                 $loginResult = $this->auth->login($_POST["email"], $_POST["password"]);
                 var_dump($loginResult);
                 if ($loginResult[0]) {
-                    $this->view->show("welcome", array('infos' => ["Welcome Back!"] ));
+                    $this->redirect("/game");
                 }else {
                     $this->view->show("welcome", array('errors' => $loginResult[1] ));
                 }

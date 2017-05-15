@@ -2,7 +2,9 @@
 
     class LightController{
 
-        private $libMan;
+        protected $libMan;
+        protected $modelMan;
+        protected $view;
 
         function __construct(){
             $this->modelMan = new ModelManager;

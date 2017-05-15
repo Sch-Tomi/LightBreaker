@@ -1,7 +1,7 @@
 class Mirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating, imgsrc = null) {
         if (imgsrc === null) {
-            super("img/tukor.png", heading, x, y, moving, rotating)
+            super("/img/blocks/tukor.png", heading, x, y, moving, rotating)
         } else {
             super(imgsrc, heading, x, y, moving, rotating)
         }

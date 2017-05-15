@@ -122,35 +122,36 @@
         }
 
         private function is_fit_to_expresson($row){
+            if (isset($this->where)) {
+                foreach (explode("AND",$this->where) as $expresson) {
+                    $explod_exp = explode(" ",trim($expresson));
+                    switch ($explod_exp[1]) {
+                        case '==':
+                            if($row[$explod_exp[0]] != $explod_exp[2])
+                                return false;
+                            break;
+                        case '!=':
+                            if($row[$explod_exp[0]] == $explod_exp[2])
+                                return false;
+                            break;
+                        case '>':
+                            if($row[$explod_exp[0]] <= $explod_exp[2])
+                                return false;
+                            break;
+                        case '<':
+                            if($row[$explod_exp[0]] >= $explod_exp[2])
+                                return false;
+                            break;
+                        case '>=':
+                            if($row[$explod_exp[0]] < $explod_exp[2])
+                                return false;
+                            break;
+                        case '<=':
+                            if($row[$explod_exp[0]] > $explod_exp[2])
+                                return false;
+                            break;
 
-            foreach (explode("AND",$this->where) as $expresson) {
-                $explod_exp = explode(" ",trim($expresson));
-                switch ($explod_exp[1]) {
-                    case '==':
-                        if($row[$explod_exp[0]] != $explod_exp[2])
-                            return false;
-                        break;
-                    case '!=':
-                        if($row[$explod_exp[0]] == $explod_exp[2])
-                            return false;
-                        break;
-                    case '>':
-                        if($row[$explod_exp[0]] <= $explod_exp[2])
-                            return false;
-                        break;
-                    case '<':
-                        if($row[$explod_exp[0]] >= $explod_exp[2])
-                            return false;
-                        break;
-                    case '>=':
-                        if($row[$explod_exp[0]] < $explod_exp[2])
-                            return false;
-                        break;
-                    case '<=':
-                        if($row[$explod_exp[0]] > $explod_exp[2])
-                            return false;
-                        break;
-
+                    }
                 }
             }
             return true;

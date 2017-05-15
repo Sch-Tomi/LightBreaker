@@ -4,32 +4,27 @@ class Game {
         this.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
 
         this._setInteface()
-        this._precentRightClick()
+        this._preventRightClick()
 
         this._minHit = 0
 
+        this._lvl_data = ""
+
+    }
+
+    setLvl(data) {
+        this._lvl_data = data;
     }
 
     run() {
         // Let's play this game!
+        this._parseLvl();
         this._main();
     }
 
     _setInteface() {
 
         this._modal = new Modal()
-
-        this.selector = document.createElement("select")
-        this.selector.id = "lvlSelect"
-        this.selector.innerHTML += "<option disabled selected value> -- válassz egy pályát -- </option>"
-        this.selector.innerHTML += "<option value='1'>Level 1</option>"
-        this.selector.innerHTML += "<option value='2'>Level 2</option>"
-        this.selector.innerHTML += "<option value='3'>Level 3</option>"
-
-        document.body.querySelector("#lightBreaker-lvlSelector").appendChild(this.selector)
-        this.selector.onchange = () => {
-            this._levelSelect()
-        }
 
         this.fireButton = document.createElement('button')
         this.fireButton.textContent = 'Tűz!'
@@ -42,64 +37,62 @@ class Game {
         }
     }
 
-    _precentRightClick() {
+    _preventRightClick() {
         document.body.oncontextmenu = () => {
             return false
         }
     }
 
-    _levelSelect() {
-        this.canvas.clear()
-        switch (parseInt(this.selector.options[this.selector.selectedIndex].value)) {
-            case 1:
-                this._level1()
-                break;
-            case 2:
-                this._level2()
-                break;
-            case 3:
-                this._level3()
-                break;
-            default:
+    _parseLvl() {
+        let lvl = this._lvl_data[0]
+        this._parseField(lvl.field)
+        this._parseParking(lvl.parking)
 
+        this._minHit = lvl.hits
+        this.canvas.setLimit(this._minHit)
+    }
+
+    _parseField(field) {
+
+        for (let block of field) {
+            this.canvas.addBlock(this._createNewBlock(block))
         }
+
     }
 
-    _level1() {
-        this.canvas.addBlock(new Laser(180, 1, 1, false, false))
-        this.canvas.addBlock(new Target(0, 3, 3, false, true))
-        this.canvas.addParkingBlock(new DoubleMirror(0, 0, 0, true, true))
+    _parseParking(parking) {
 
-        this._minHit = 1
-        this.canvas.setLimit(this._minHit)
+        for (var block of parking) {
+            this.canvas.addParkingBlock(this._createNewBlock(block))
+        }
+
     }
 
-    _level2() {
-        this.canvas.addBlock(new Laser(270, 0, 0, false, true))
-        this.canvas.addBlock(new Target(90, 4, 0, false, true))
-        this.canvas.addBlock(new DoubleMirror(90, 3, 1, false, false))
+    _createNewBlock(block) {
+        switch (block.type) {
+            case "HalfMirror":
+                return new HalfMirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Mirror":
+                return new Mirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "DoubleMirror":
+                return new DoubleMirror(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Target":
+                return new Target(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "CheckPoint":
+                return new CheckPoint(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Blcoker":
+                return new Blocker(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+            case "Laser":
+                return new Laser(block.heading, block.col, block.row, block.moving, block.rotating)
+                break;
+        }
 
-        this.canvas.addParkingBlock(new Target(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new HalfMirror(0, 0, 0, true, true))
-
-        this._minHit = 2
-        this.canvas.setLimit(this._minHit)
-    }
-
-    _level3() {
-        this.canvas.addBlock(new Laser(90, 1, 2, false, true))
-        this.canvas.addBlock(new Mirror(270, 2, 0, false, true))
-        this.canvas.addBlock(new Mirror(270, 4, 0, false, true))
-        this.canvas.addBlock(new Mirror(0, 3, 2, false, false))
-        this.canvas.addBlock(new DoubleMirror(90, 0, 4, false, false))
-        this.canvas.addBlock(new CheckPoint(0, 4, 3, false, false))
-
-        this.canvas.addParkingBlock(new Mirror(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new Mirror(0, 0, 0, true, true))
-        this.canvas.addParkingBlock(new HalfMirror(0, 0, 0, true, true))
-
-        this._minHit = 2
-        this.canvas.setLimit(this._minHit)
     }
 
     _fire() {
@@ -118,7 +111,7 @@ class Game {
                 }
             }
             this.canvas.drawResult(result.paths)
-        }else {
+        } else {
             this._modal.setUp("Hiba!", ["Minden tükröt kötelezően fel kell használnod!"])
         }
 

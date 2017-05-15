@@ -6,7 +6,7 @@
 
 <div id="menubar">
     <div id="welcome">
-        <img src="img/laser-beam.png" alt="">
+        <img src="/img/laser-beam.png" alt="">
         <a href="/">Light Breaker</a>
     </div>
     <!--close welcome-->

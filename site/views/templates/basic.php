@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Light Breaker</title>
-    <link rel='shortcut icon' type='image/x-icon' href='img/favicon.ico' />
+    <link rel='shortcut icon' type='image/x-icon' href='/img/favicon.ico' />
 
     <?php
     foreach($this->styles as $file){?>
@@ -78,7 +78,7 @@
                   ?>
 
                 <?php
-                    echo $this->get_view($view);
+                    $this->get_view($view);
                  ?>
             </div>
 
