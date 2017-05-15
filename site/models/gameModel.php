@@ -58,6 +58,7 @@
             if(isset($game_id) && isset($status) && $this->auth->is_logged() && $status == "success"){
                 $this->db->insert_into("success")->values(array('user_id' => $this->auth->get_data_from_logged_user("id"),
                                                                 'game_id' => $game_id))->execute();
+                return $this->collectSolvers($game_id);
             }
         }
 
@@ -103,6 +104,21 @@
                          "row"      => $block[3],
                          "moving"   => $block[4],
                          "rotating" => $block[5] );
+        }
+
+        private function collectSolvers($game_id)
+        {
+            $userIds = $this->db->select(array("user_id"))->from("success")->where("game_id == ".$game_id)->execute();
+            $userNames = array();
+            foreach ($userIds as $uid) {
+                //var_dump($this->db->select(array("name"))->from("user")->where("id == ".$uid["user_id"])->execute());
+                $user = $this->db->select(array("name"))->from("user")->where("id == ".$uid["user_id"])->execute();
+                if (count($user) == 1) {
+                    $userNames[] =$user[0]["name"];
+                }
+            }
+
+            return $userNames;
         }
     }
 

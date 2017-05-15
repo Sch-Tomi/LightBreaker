@@ -104,6 +104,7 @@ class Game {
                     mod: 'post',
                     url: '/game/report',
                     postadat: 'status=success&id='+window.location.pathname.split("/")[2],
+                    siker: (xhr, txt) => {this._modal.setUp("Gratulálok", ["Ők is megoldották már: \n\n", txt]); this._modal.show()}
                 })
             } else {
                 let missNumber = parseInt(this._minHit) - parseInt(result.hits)

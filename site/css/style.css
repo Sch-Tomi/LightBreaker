@@ -454,6 +454,10 @@ ul#menu li.current a, ul#menu li:hover a {
     box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.33);
 }
 
+.controll-help p {
+    text-align: justify;
+}
+
 #footer img {
     width: 5%;
     vertical-align: middle;

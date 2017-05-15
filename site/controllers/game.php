@@ -36,8 +36,7 @@
 
         public function report()
         {
-            echo "Contorller OK";
-            $this->gameModel->report($_POST["id"], $_POST["status"]);
+            echo join(", ", $this->gameModel->report($_POST["id"], $_POST["status"]));
         }
     }
 

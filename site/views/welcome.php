@@ -2,7 +2,7 @@
     <img src="img/laser-beam-512.png" alt="" width="256">
     <h1>LightBreaker</h1>
     <div class="description">
-        <p>A LightBreaker egy logika fejtőrő játék, amiben a játékosnak úgy kell a pályán megadott elemet elhelyezni, hogy megfelelő számú cél objektumot találjon el.
+        <p>A LightBreaker egy logika fejtőrő játék, amiben a játékosnak úgy kell a pályán megadott elemet elhelyezni, hogy megfelelő számú célobjektumot találjon el.
             A játékban 7 különböző objektum vagy blokk létezik ezek:
         </p>
         <ul>
