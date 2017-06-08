@@ -1,4 +1,5 @@
 # Light Breaker
+
 Puzzle game written in JS with PHP server side.
 
 This is my homework for Web Development 2 subject.
@@ -8,10 +9,11 @@ This is my homework for Web Development 2 subject.
 1. You have to copy site folder content to your webhost.
 2. If you copied in a folder on your host (so the game will be avaliable like mygame.com/game1/ ) then you have to change /config/config.php app_folder variable to the folder name. (so in this example "/game1")
 3. Set permissions the db files.
-    - /lib/DataBase/db
+
+  - /lib/DataBase/db
+
 4. Default admin login: admin@admin.hu pw.: admin
 5. Default user login: test@test.com pw.: ASDqwe123'"+
-
 
 ## Task:
 
@@ -21,12 +23,14 @@ Minden egyes feladványnál rendezd el úgy a megadott objektumokat a táblán, 
 
 ### Objektumok
 
-- Lézer: innen indul a lézersugár a nyíl irányában. ![Laser](site/img/blocks/lezer.png)
-- Célpont/tükör: használható célpontként, tükörként vagy egyszerre mindkettőként. Csak az objektum sötétebb háromszöggel jelzett oldala érvényes célpont. Ha piros körrel jelezve van, akkor az adott tükörnek mindenféleképpen célpontnak KELL lennie (de emellett használható tükörként is). Egyéb esetben célpontként, tükörként, vagy mindkét módon is viselkedhet. ![Laser](site/img/blocks/cel.png) ![Laser](site/img/blocks/tukor.png)
-- Féligáteresztő tükör: kétfelé választja a lézersugarat. Az egyik sugár 90 fokkal megtörve halad tovább, míg a másik a tükrön keresztül egyenesen halad tovább. ![Laser](site/img/blocks/felig.png)
-- Dupla tükör: az objektum mindkét oldala 90 fokban töri meg a sugár útját. ![Laser](site/img/blocks/dupla.png)
-- Ellenőrzőpont: olyan objektum, amelyen a lézersugárnak mindenképpen át kell haladnia. ![Laser](site/img/blocks/ellenorzo.png)
-- Blokkoló: foglalja a helyet, ahol a blokkoló van, oda más objektum nem kerülhet. A lézersugár útját nem akadályozza. ![Laser](site/img/blocks/blokkolo.png)
+Objektum             |                                 Képe                                  | Leírása
+-------------------- | :-------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Lézer                |                  ![Laser](site/img/blocks/lezer.png)                  | innen indul a lézersugár a nyíl irányában.
+Célpont/tükör        | ![Laser](site/img/blocks/cel.png) ![Laser](site/img/blocks/tukor.png) | használható célpontként, tükörként vagy egyszerre mindkettőként. Csak az objektum sötétebb háromszöggel jelzett oldala érvényes célpont. Ha piros körrel jelezve van, akkor az adott tükörnek mindenféleképpen célpontnak KELL lennie (de emellett használható tükörként is). Egyéb esetben célpontként, tükörként, vagy mindkét módon is viselkedhet.
+Féligáteresztő tükör |                  ![Laser](site/img/blocks/felig.png)                  | kétfelé választja a lézersugarat. Az egyik sugár 90 fokkal megtörve halad tovább, míg a másik a tükrön keresztül egyenesen halad tovább.
+Dupla tükör          |                  ![Laser](site/img/blocks/dupla.png)                  | az objektum mindkét oldala 90 fokban töri meg a sugár útját.
+Ellenőrzőpont        |                ![Laser](site/img/blocks/ellenorzo.png)                | olyan objektum, amelyen a lézersugárnak mindenképpen át kell haladnia.
+Blokkoló             |                ![Laser](site/img/blocks/blokkolo.png)                 | foglalja a helyet, ahol a blokkoló van, oda más objektum nem kerülhet. A lézersugár útját nem akadályozza.
 
 ### A játék menete
 
@@ -36,8 +40,7 @@ A játék egy 5x5-ös táblán zajlik, erre kell elhelyezni az adott feladványb
 - A hozzáadandó elemek. Ugyancsak meg vannak a tábla mellett adva azok az elemek, amelyeket fel KELL rakni a táblára a feladat megoldásához. Ezek az elemek más elemekre nem rakhatók, viszont tetszőlegesen forgathatók 90 fokonként.
 - A megvilágított célpontok száma. A feladvány tartalmazza, hogy hány célpontot kell megvilágítani a lézernek. A piros körrel jelzett tükrök cél oldalát mindenféleképpen el kell találni, de lehet, hogy piros körrel expliciten nem jelzett tükör cél oldalát kell eltalálni.
 
-A feladat megoldásához a feladványban szereplő összes objektumot fel kell használni. Pontosan a feladványkártyán szereplő mennyiségű célpontot kell aktiválni. A lézersugárnak minden, a feladványban felsorolt objektumot érintenie kell legalább egyszer (kivéve a blokkolót). A feladat akkor van megoldva, ha a lézersugár a megadott mennyiségű célpontot aktiválta, és (a blokkoló kivételével) minden jelzőt érintett legalább egyszer.
-Működés és segítség
+A feladat megoldásához a feladványban szereplő összes objektumot fel kell használni. Pontosan a feladványkártyán szereplő mennyiségű célpontot kell aktiválni. A lézersugárnak minden, a feladványban felsorolt objektumot érintenie kell legalább egyszer (kivéve a blokkolót). A feladat akkor van megoldva, ha a lézersugár a megadott mennyiségű célpontot aktiválta, és (a blokkoló kivételével) minden jelzőt érintett legalább egyszer. Működés és segítség
 
 Nincs elvárás arra vonatkozóan, hogy milyen technológiával (táblázat vagy canvas) oldod meg a feladatot, továbbá a megjelenést és működést illetően sincsenek kőbe vésett elvárások. Kiválasztva egy feladatot, jelenjen meg a feladvány, és valamilyen módon legyen lehetőség megoldani.
 
@@ -54,6 +57,7 @@ Az objektumok mozgatása többféleképpen is történhet: lehet drag and dropot
 - Bejelentkezés után egy listaoldalra kerülünk, ahol a rendszerben tárolt pályák kerülnek felsorolásra. Egy pályánál fel kell tüntetni a nevét (pl. vagy azonosítóját, pl. "Advanced13"), a nehézségét, hányan oldották már meg, illetve a bejelentkezett felhasználó megoldotta-e már.
 - A listában egy pályára kattintva egy másik oldalon a kiválasztott pályával lehet játszani. A játék végeztével a sikerességet AJAX hívással kell a szerverrel közölni és elmenteni a játékhoz, válaszként pedig az adott pályát sikeresen elvégzett játékosok listáját kell visszaadni és megjeleníteni.
 - Legyen egy speciális felhasználó (név: admin, email: admin@admin.hu, jelszó: admin), aki belépve még egy funkcióhoz hozzáfér: új pálya felviteléhez. Itt megadhatja az új pálya nevét, nehézségét, és szerkesztheti a pályaelemeket: a táblán eredetileg fent lévő objektumokat, a felrakandó objektumokat és az akadályok számát. Hogy ezek megadása miként történik, nincs megkötve.
-    - Lehet az, hogy valaki a játék "motorját" átalakítja és egy drag and drop-os felületet alakít ki.
-    - Lehet az is, hogy valaki egy textarea-ban egy JSON szöveg szerkesztését követeli meg (érdemes valamilyen példafelépítést megadni).
-    - De az is lehet, hogy valaki ennél egy fokkal egyszerűbb szöveges formátumot határoz meg (érdemes valamilyen példafelépítést megadni)
+
+  - Lehet az, hogy valaki a játék "motorját" átalakítja és egy drag and drop-os felületet alakít ki.
+  - Lehet az is, hogy valaki egy textarea-ban egy JSON szöveg szerkesztését követeli meg (érdemes valamilyen példafelépítést megadni).
+  - De az is lehet, hogy valaki ennél egy fokkal egyszerűbb szöveges formátumot határoz meg (érdemes valamilyen példafelépítést megadni)
