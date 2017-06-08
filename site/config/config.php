@@ -1,5 +1,5 @@
 <?php
 
-    $this->app_folder = "/a/b";
+    $this->app_folder = "";
 
  ?>
