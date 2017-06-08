@@ -5,7 +5,9 @@
         function __construct(){
         }
 
-        public function parse($routes, $url, $method){
+        public function parse($routes, $url, $method, $base){
+
+            $url = $this->remove_app_folder($url, $base);
 
             $new_route = $this->find_fitting_route($routes[$method], $url);
 
@@ -15,6 +17,10 @@
                 return [$routes['GET']["404"], []];
             }
 
+        }
+
+        private function remove_app_folder($url, $base) {
+            return str_replace($base, "", $url);
         }
 
         private function find_fitting_route($routes, $url){

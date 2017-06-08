@@ -4,7 +4,7 @@
             <h2>Bejelentkezés</h2>
             <div class="sidebar-content">
                 <div class="login-box">
-                    <form class="email-login" action="/login" method="post">
+                    <form class="email-login" action="login" method="post">
                       <div class="u-form-group">
                         <input type="email" name="email" placeholder="Email"/>
                       </div>

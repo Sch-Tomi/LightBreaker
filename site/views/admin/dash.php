@@ -1,7 +1,7 @@
 
 <div class="adminDash">
     <div class="left">
-        <form action="/admin/add" method="post">
+        <form action="admin/add" method="post">
             <h1>Új Játék Felvétele</h1>
             <input type="text" name="name" placeholder="Az új játék neve" ><br>
             <input type="text" name="hits" placeholder="Minimum találatok száma" ><br>
@@ -85,10 +85,10 @@
                 foreach ($data["games"] as $game) {
                     ?>
                     <tr>
-                        <td><a href="/game/<?php echo $game["id"];?> "><?php echo $game["name"] ?></a></td>
+                        <td><a href="game/<?php echo $game["id"];?> "><?php echo $game["name"] ?></a></td>
                         <td><?php echo $game["difficult"] ?></td>
                         <td><?php echo $game["solves"] ?></td>
-                        <td><a href="/admin/delete/<?php echo $game["id"];?>"><img src="/img/Letter-X-icon.png" alt="Delete"></a></td>
+                        <td><a href="admin/delete/<?php echo $game["id"];?>"><img src="/img/Letter-X-icon.png" alt="Delete"></a></td>
                     </tr>
                     <?php
                 }

@@ -102,9 +102,12 @@ class Game {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
                 this._ajax({
                     mod: 'post',
-                    url: '/game/report',
-                    postadat: 'status=success&id='+window.location.pathname.split("/")[2],
-                    siker: (xhr, txt) => {this._modal.setUp("Gratulálok", ["Ők is megoldották már: \n\n", txt]); this._modal.show()}
+                    url: 'game/report',
+                    postadat: 'status=success&id=' + this._getGameID(),
+                    siker: (xhr, txt) => {
+                        this._modal.setUp("Gratulálok", ["Ők is megoldották már: \n\n", txt]);
+                        this._modal.show()
+                    }
                 })
             } else {
                 let missNumber = parseInt(this._minHit) - parseInt(result.hits)
@@ -134,7 +137,7 @@ class Game {
 
         mod = mod.toUpperCase();
 
-        if(this._endsWithPhp(url)){
+        if (this._endsWithPhp(url)) {
             url = url + '?' + getadat;
         }
 
@@ -157,12 +160,17 @@ class Game {
         return xhr;
     }
 
-    _endsWithPhp(url){
+    _endsWithPhp(url) {
 
-        return url[url.length-1] == "p" &&
-                url[url.length-2] == "h" &&
-                url[url.length-3] == "p"
+        return url[url.length - 1] == "p" &&
+            url[url.length - 2] == "h" &&
+            url[url.length - 3] == "p"
 
+    }
+
+    _getGameID() {
+        let split = window.location.pathname.split("/")
+        return split[split.length - 1]
     }
 
     _main() {

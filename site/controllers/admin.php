@@ -12,7 +12,7 @@
             $this->gameModel = $this->modelMan->load_and_create("GameModel");
             $this->view->set_template("basic");
 
-            $this->view->add_style("/css/style.css");
+            $this->view->add_style("css/style.css");
 
             $this->view->add_section("menu", "sections/menu");
             $this->view->add_section("footer", "sections/footer");
@@ -21,9 +21,9 @@
         }
 
         public function adminDash(){
-            $this->view->add_style("/css/table.css");
-            $this->view->add_style("/css/adminDash.css");
-            $this->view->add_script("/js/adminHelper.js");
+            $this->view->add_style("css/table.css");
+            $this->view->add_style("css/adminDash.css");
+            $this->view->add_script("js/adminHelper.js");
             $this->view->show("admin/dash", array('games' => $this->gameModel->get_games()  ));
         }
 

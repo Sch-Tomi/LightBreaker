@@ -73,6 +73,86 @@ class Parking {
 }
 
 
+class Modal {
+    constructor() {
+        this._text = ""
+        this._header = ""
+
+        this._createModal()
+        //this.show()
+    }
+
+    setUp(newHeader, newText){
+
+        this._text = ""
+
+        for (let text of newText) {
+            this._text += "<p>"+text+"</p>"
+        }
+
+        this._header = newHeader
+    }
+
+    _createModal(){
+
+        let modal = document.createElement('div')
+        modal.id = "messageModal"
+        modal.className = "modal"
+
+        let content = document.createElement('div')
+        content.id = "messageModal-content"
+        content.className = "modal-content"
+
+        let header = document.createElement('div')
+        header.className = "modal-header"
+        header.innerHTML += '<span id="messageModal-close" class="close">&times;</span>'
+        header.innerHTML += '<h2 id="messageModal-header"></h2>'
+
+        let body = document.createElement('div')
+        body.className = "modal-body"
+        body.id = "messageModal-body"
+
+        content.appendChild(header)
+        content.appendChild(body)
+        modal.appendChild(content)
+
+        document.body.appendChild(modal)
+
+        document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
+
+
+    }
+
+    hide(){
+
+        document.querySelector('#messageModal').style.webkitAnimationName = 'fadeOut'
+        document.querySelector('#messageModal-content').style.webkitAnimationName = 'slideOut'
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "none";
+        })
+
+
+    }
+
+    show(){
+
+        document.querySelector('#messageModal').style.animationName = 'fadeIn'
+        document.querySelector('#messageModal-content').style.animationName = 'slideIn'
+
+        document.querySelector('#messageModal-header').innerHTML = this._header
+        document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
+        document.querySelector('#messageModal').style.display = "block";
+
+        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
+            document.querySelector('#messageModal').style.display = "block";
+        })
+
+        setTimeout(() => {this.hide()}, 3000);
+    }
+}
+
+
 class LaserPathDrawing {
 
     constructor(table_dimension, table_row_num, table_col_num, table_padding, cell_dimension) {
@@ -251,36 +331,6 @@ class LaserPathDrawing {
 }
 
 
-class GameBoard {
-    constructor(context, cellDimension, boardDimension, tablePadding) {
-        this._context = context
-        this._cellDimension = cellDimension
-        this._boardDimension = boardDimension
-        this._tablePadding = tablePadding
-    }
-
-    render() {
-        this._context.beginPath()
-
-        for (var x = 0; x <= this._boardDimension; x += this._cellDimension) {
-            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
-            this._context.lineTo(0.5 + x + this._tablePadding, this._boardDimension + this._tablePadding)
-        }
-
-        for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
-            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
-            this._context.lineTo(this._boardDimension + this._tablePadding, 0.5 + y + this._tablePadding);
-        }
-
-        this._context.lineWidth = 1
-        this._context.strokeStyle = "black"
-        this._context.stroke()
-    }
-
-
-}
-
-
 class Canvas {
     constructor() {
         this._createCanvas()
@@ -298,7 +348,7 @@ class Canvas {
 
 
         this._lock = new Image()
-        this._lock.src = "/img/blocks/lock.png"
+        this._lock.src = "img/blocks/lock.png"
 
         this._gameBoard = new GameBoard(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
         this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
@@ -378,12 +428,12 @@ class Canvas {
         return matrix
     }
 
-    setLimit(newLimit){
+    setLimit(newLimit) {
         this._hitCounter.setCounter(newLimit)
     }
     ///* PRIVATES
 
-    _createCanvas(){
+    _createCanvas() {
         this._canvas = document.createElement("canvas")
         this._context = this._canvas.getContext("2d")
         this._canvas.width = 780
@@ -391,16 +441,16 @@ class Canvas {
         document.querySelector("#lightBreaker").appendChild(this._canvas);
     }
 
-    _connectMouseEvents(){
-      this._canvas.onmousedown = (e) => {
-          this._mouseDown(e)
-      }
-      this._canvas.onmouseup = (e) => {
-          this._mouseUp(e)
-      }
-      this._canvas.ondblclick = (e) => {
-          this._mouseClick(e)
-      }
+    _connectMouseEvents() {
+        this._canvas.onmousedown = (e) => {
+            this._mouseDown(e)
+        }
+        this._canvas.onmouseup = (e) => {
+            this._mouseUp(e)
+        }
+        this._canvas.ondblclick = (e) => {
+            this._mouseClick(e)
+        }
     }
 
     _mouseDown(e) {
@@ -502,7 +552,7 @@ class Canvas {
         }
     }
 
-    _renderBlocks(){
+    _renderBlocks() {
         for (var block of this._blocks) {
             this._drawRotatedImage(block.get_img(), block.get_x(), block.get_y(), block.get_direction());
 
@@ -611,115 +661,33 @@ class HitCounter {
 }
 
 
-class Modal {
-    constructor() {
-        this._text = ""
-        this._header = ""
-
-        this._createModal()
-        //this.show()
+class GameBoard {
+    constructor(context, cellDimension, boardDimension, tablePadding) {
+        this._context = context
+        this._cellDimension = cellDimension
+        this._boardDimension = boardDimension
+        this._tablePadding = tablePadding
     }
 
-    setUp(newHeader, newText){
+    render() {
+        this._context.beginPath()
 
-        this._text = ""
-
-        for (let text of newText) {
-            this._text += "<p>"+text+"</p>"
+        for (var x = 0; x <= this._boardDimension; x += this._cellDimension) {
+            this._context.moveTo(0.5 + x + this._tablePadding, this._tablePadding)
+            this._context.lineTo(0.5 + x + this._tablePadding, this._boardDimension + this._tablePadding)
         }
 
-        this._header = newHeader
+        for (var y = 0; y <= this._boardDimension; y += this._cellDimension) {
+            this._context.moveTo(this._tablePadding, 0.5 + y + this._tablePadding)
+            this._context.lineTo(this._boardDimension + this._tablePadding, 0.5 + y + this._tablePadding);
+        }
+
+        this._context.lineWidth = 1
+        this._context.strokeStyle = "black"
+        this._context.stroke()
     }
 
-    _createModal(){
 
-        let modal = document.createElement('div')
-        modal.id = "messageModal"
-        modal.className = "modal"
-
-        let content = document.createElement('div')
-        content.id = "messageModal-content"
-        content.className = "modal-content"
-
-        let header = document.createElement('div')
-        header.className = "modal-header"
-        header.innerHTML += '<span id="messageModal-close" class="close">&times;</span>'
-        header.innerHTML += '<h2 id="messageModal-header"></h2>'
-
-        let body = document.createElement('div')
-        body.className = "modal-body"
-        body.id = "messageModal-body"
-
-        content.appendChild(header)
-        content.appendChild(body)
-        modal.appendChild(content)
-
-        document.body.appendChild(modal)
-
-        document.querySelector('#messageModal-close').onclick = (e) => {this.hide()}
-
-
-    }
-
-    hide(){
-
-        document.querySelector('#messageModal').style.webkitAnimationName = 'fadeOut'
-        document.querySelector('#messageModal-content').style.webkitAnimationName = 'slideOut'
-
-        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
-            document.querySelector('#messageModal').style.display = "none";
-        })
-
-
-    }
-
-    show(){
-
-        document.querySelector('#messageModal').style.animationName = 'fadeIn'
-        document.querySelector('#messageModal-content').style.animationName = 'slideIn'
-
-        document.querySelector('#messageModal-header').innerHTML = this._header
-        document.querySelector('#messageModal-body').innerHTML = "<p>"+this._text+"</p>"
-        document.querySelector('#messageModal').style.display = "block";
-
-        document.querySelector('#messageModal').addEventListener('animationend', (e) => {
-            document.querySelector('#messageModal').style.display = "block";
-        })
-
-        setTimeout(() => {this.hide()}, 3000);
-    }
-}
-
-
-class Position {
-    constructor(row, col, direction) {
-        this.row = row
-        this.col = col
-        this.direction = direction
-    }
-}
-
-
-class Path {
-    constructor() {
-        this._path = []
-    }
-
-    push(element) {
-        this._path.push(element)
-    }
-
-    get length(){
-        return this._path.length
-    }
-
-    get_last() {
-        return this._path[this._path.length - 1]
-    }
-
-    get_path() {
-        return this._path
-    }
 }
 
 
@@ -853,6 +821,38 @@ class LaserPathCalculator {
 }
 
 
+class Position {
+    constructor(row, col, direction) {
+        this.row = row
+        this.col = col
+        this.direction = direction
+    }
+}
+
+
+class Path {
+    constructor() {
+        this._path = []
+    }
+
+    push(element) {
+        this._path.push(element)
+    }
+
+    get length(){
+        return this._path.length
+    }
+
+    get_last() {
+        return this._path[this._path.length - 1]
+    }
+
+    get_path() {
+        return this._path
+    }
+}
+
+
 class Game {
     constructor() {
         this.canvas = new Canvas()
@@ -957,9 +957,12 @@ class Game {
                 this._modal.setUp("Gratulálok", ["Sikeresen teljesítetted a pályát!"])
                 this._ajax({
                     mod: 'post',
-                    url: '/game/report',
-                    postadat: 'status=success&id='+window.location.pathname.split("/")[2],
-                    siker: (xhr, txt) => {this._modal.setUp("Gratulálok", ["Ők is megoldották már: \n\n", txt]); this._modal.show()}
+                    url: 'game/report',
+                    postadat: 'status=success&id=' + this._getGameID(),
+                    siker: (xhr, txt) => {
+                        this._modal.setUp("Gratulálok", ["Ők is megoldották már: \n\n", txt]);
+                        this._modal.show()
+                    }
                 })
             } else {
                 let missNumber = parseInt(this._minHit) - parseInt(result.hits)
@@ -989,7 +992,7 @@ class Game {
 
         mod = mod.toUpperCase();
 
-        if(this._endsWithPhp(url)){
+        if (this._endsWithPhp(url)) {
             url = url + '?' + getadat;
         }
 
@@ -1012,12 +1015,17 @@ class Game {
         return xhr;
     }
 
-    _endsWithPhp(url){
+    _endsWithPhp(url) {
 
-        return url[url.length-1] == "p" &&
-                url[url.length-2] == "h" &&
-                url[url.length-3] == "p"
+        return url[url.length - 1] == "p" &&
+            url[url.length - 2] == "h" &&
+            url[url.length - 3] == "p"
 
+    }
+
+    _getGameID() {
+        let split = window.location.pathname.split("/")
+        return split[split.length - 1]
     }
 
     _main() {
@@ -1105,7 +1113,7 @@ class MasterBlock {
 
 class CheckPoint extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("/img/blocks/ellenorzo.png", heading, x, y, moving, rotating)
+        super("img/blocks/ellenorzo.png", heading, x, y, moving, rotating)
 
         this._hit = false
     }
@@ -1124,7 +1132,7 @@ class CheckPoint extends MasterBlock {
 
 class Blocker extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("/img/blocks/blokkolo.png", heading, x, y, moving, rotating)
+        super("img/blocks/blokkolo.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(dir) {
@@ -1135,7 +1143,7 @@ class Blocker extends MasterBlock {
 
 class Laser extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("/img/blocks/lezer.png", heading, x, y, moving, rotating)
+        super("img/blocks/lezer.png", heading, x, y, moving, rotating)
     }
 }
 
@@ -1143,7 +1151,7 @@ class Laser extends MasterBlock {
 class Mirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating, imgsrc = null) {
         if (imgsrc === null) {
-            super("/img/blocks/tukor.png", heading, x, y, moving, rotating)
+            super("img/blocks/tukor.png", heading, x, y, moving, rotating)
         } else {
             super(imgsrc, heading, x, y, moving, rotating)
         }
@@ -1175,45 +1183,45 @@ class Mirror extends MasterBlock {
     }
 
 
-    _getNewDirectionWithNormalMirrorPosition(direction){
-      switch (direction) {
-        case 0:
-          return [90]
-          break;
-        case 90:
-          return [0]
-          break
-        case 180:
-          return [270]
-          break;
-        case 270:
-          return [180]
-          break;
-      }
+    _getNewDirectionWithNormalMirrorPosition(direction) {
+        switch (direction) {
+            case 0:
+                return [90]
+                break;
+            case 90:
+                return [0]
+                break
+            case 180:
+                return [270]
+                break;
+            case 270:
+                return [180]
+                break;
+        }
     }
 
-    _getNewDirectionWithOpositeMirrorPosition(direction){
-      switch (direction) {
-        case 0:
-          return [270]
-          break;
-        case 90:
-          return [180]
-          break
-        case 180:
-          return [90]
-          break;
-        case 270:
-          return [0]
-          break;
-      }
+    _getNewDirectionWithOpositeMirrorPosition(direction) {
+        switch (direction) {
+            case 0:
+                return [270]
+                break;
+            case 90:
+                return [180]
+                break
+            case 180:
+                return [90]
+                break;
+            case 270:
+                return [0]
+                break;
+        }
     }
 }
 
 
 class Target extends Mirror {
     constructor(heading, x, y, moving, rotating) {
-        super(heading, x, y, moving, rotating, "/img/blocks/cel.png")
+        super(heading, x, y, moving, rotating, "img/blocks/cel.png")
 
         this._hit = false
 
@@ -1228,7 +1236,7 @@ class Target extends Mirror {
 
 class DoubleMirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("/img/blocks/dupla.png", heading, x, y, moving, rotating)
+        super("img/blocks/dupla.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(laserDirection) {
@@ -1238,53 +1246,53 @@ class DoubleMirror extends MasterBlock {
         //console.log(myDir + " - " + dir);
 
         if (myDirection == 0) {
-          return this._getNewDirectionWithNormalMirrorPosition(laserDirection)
+            return this._getNewDirectionWithNormalMirrorPosition(laserDirection)
         } else {
-          return this._getNewDirectionWithOpositeMirrorPosition(laserDirection)
+            return this._getNewDirectionWithOpositeMirrorPosition(laserDirection)
         }
 
     }
 
 
-    _getNewDirectionWithNormalMirrorPosition(direction){
-      switch (direction) {
-        case 0:
-          return [270]
-          break;
-        case 90:
-          return [180]
-          break
-        case 180:
-          return [90]
-          break;
-        case 270:
-          return [0]
-          break;
-      }
+    _getNewDirectionWithNormalMirrorPosition(direction) {
+        switch (direction) {
+            case 0:
+                return [270]
+                break;
+            case 90:
+                return [180]
+                break
+            case 180:
+                return [90]
+                break;
+            case 270:
+                return [0]
+                break;
+        }
     }
 
-    _getNewDirectionWithOpositeMirrorPosition(direction){
-      switch (direction) {
-        case 0:
-          return [90]
-          break;
-        case 90:
-          return [0]
-          break
-        case 180:
-          return [270]
-          break;
-        case 270:
-          return [180]
-          break;
-      }
+    _getNewDirectionWithOpositeMirrorPosition(direction) {
+        switch (direction) {
+            case 0:
+                return [90]
+                break;
+            case 90:
+                return [0]
+                break
+            case 180:
+                return [270]
+                break;
+            case 270:
+                return [180]
+                break;
+        }
     }
 }
 
 
 class HalfMirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("/img/blocks/felig.png", heading, x, y, moving, rotating)
+        super("img/blocks/felig.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(dir) {

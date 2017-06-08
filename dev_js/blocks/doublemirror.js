@@ -1,6 +1,6 @@
 class DoubleMirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating) {
-        super("/img/blocks/dupla.png", heading, x, y, moving, rotating)
+        super("img/blocks/dupla.png", heading, x, y, moving, rotating)
     }
 
     get_newDir(laserDirection) {
@@ -10,45 +10,45 @@ class DoubleMirror extends MasterBlock {
         //console.log(myDir + " - " + dir);
 
         if (myDirection == 0) {
-          return this._getNewDirectionWithNormalMirrorPosition(laserDirection)
+            return this._getNewDirectionWithNormalMirrorPosition(laserDirection)
         } else {
-          return this._getNewDirectionWithOpositeMirrorPosition(laserDirection)
+            return this._getNewDirectionWithOpositeMirrorPosition(laserDirection)
         }
 
     }
 
 
-    _getNewDirectionWithNormalMirrorPosition(direction){
-      switch (direction) {
-        case 0:
-          return [270]
-          break;
-        case 90:
-          return [180]
-          break
-        case 180:
-          return [90]
-          break;
-        case 270:
-          return [0]
-          break;
-      }
+    _getNewDirectionWithNormalMirrorPosition(direction) {
+        switch (direction) {
+            case 0:
+                return [270]
+                break;
+            case 90:
+                return [180]
+                break
+            case 180:
+                return [90]
+                break;
+            case 270:
+                return [0]
+                break;
+        }
     }
 
-    _getNewDirectionWithOpositeMirrorPosition(direction){
-      switch (direction) {
-        case 0:
-          return [90]
-          break;
-        case 90:
-          return [0]
-          break
-        case 180:
-          return [270]
-          break;
-        case 270:
-          return [180]
-          break;
-      }
+    _getNewDirectionWithOpositeMirrorPosition(direction) {
+        switch (direction) {
+            case 0:
+                return [90]
+                break;
+            case 90:
+                return [0]
+                break
+            case 180:
+                return [270]
+                break;
+            case 270:
+                return [180]
+                break;
+        }
     }
 }

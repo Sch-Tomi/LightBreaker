@@ -15,7 +15,7 @@ class Canvas {
 
 
         this._lock = new Image()
-        this._lock.src = "/img/blocks/lock.png"
+        this._lock.src = "img/blocks/lock.png"
 
         this._gameBoard = new GameBoard(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
         this._hitCounter = new HitCounter(this._context, this._cellDimension, this._boardWidth, this._tablePadding)
@@ -95,12 +95,12 @@ class Canvas {
         return matrix
     }
 
-    setLimit(newLimit){
+    setLimit(newLimit) {
         this._hitCounter.setCounter(newLimit)
     }
     ///* PRIVATES
 
-    _createCanvas(){
+    _createCanvas() {
         this._canvas = document.createElement("canvas")
         this._context = this._canvas.getContext("2d")
         this._canvas.width = 780
@@ -108,16 +108,16 @@ class Canvas {
         document.querySelector("#lightBreaker").appendChild(this._canvas);
     }
 
-    _connectMouseEvents(){
-      this._canvas.onmousedown = (e) => {
-          this._mouseDown(e)
-      }
-      this._canvas.onmouseup = (e) => {
-          this._mouseUp(e)
-      }
-      this._canvas.ondblclick = (e) => {
-          this._mouseClick(e)
-      }
+    _connectMouseEvents() {
+        this._canvas.onmousedown = (e) => {
+            this._mouseDown(e)
+        }
+        this._canvas.onmouseup = (e) => {
+            this._mouseUp(e)
+        }
+        this._canvas.ondblclick = (e) => {
+            this._mouseClick(e)
+        }
     }
 
     _mouseDown(e) {
@@ -219,7 +219,7 @@ class Canvas {
         }
     }
 
-    _renderBlocks(){
+    _renderBlocks() {
         for (var block of this._blocks) {
             this._drawRotatedImage(block.get_img(), block.get_x(), block.get_y(), block.get_direction());
 

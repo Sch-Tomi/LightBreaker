@@ -1,15 +1,10 @@
 <IfModule mod_rewrite.c>
-
-RewriteEngine On
-RewriteBase /
-
-RewriteRule ^index\.php$ - [L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
-
+  RewriteEngine on
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [L]
 </IfModule>
+
 <ifModule mod_headers.c>
 Header unset ETag
 Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"

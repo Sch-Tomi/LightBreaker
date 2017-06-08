@@ -1,8 +1,5 @@
 <?php
 
-
-
-
     class LightCMS {
 
         private $libMan;
@@ -18,13 +15,17 @@
             $this->libMan->load("UrlParser");
             $this->urlParser = new UrlParser;
 
+            $this->libMan->load("Config");
+            $this->config = new Config;
+
+
             $this->load_route();
 
         }
 
         public function run(){
             // URL feldolgozás
-            $parsedUrl = $this->urlParser->parse($this->route, $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+            $parsedUrl = $this->urlParser->parse($this->route, $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $this->config->get("app_folder"));
             $controllerName = explode("/", $parsedUrl[0]);
             $params = $parsedUrl[1];
 

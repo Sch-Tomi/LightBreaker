@@ -14,8 +14,11 @@
 
         protected function redirect($url, $statusCode = 303)
         {
-           header('Location: ' . $url, true, $statusCode);
-           die();
+
+            $config =  $this->libMan->load_and_create("Config");
+            $new_url = $config->get("app_folder").$url;
+            header('Location: ' . $new_url, true, $statusCode);
+            die();
         }
 
     }

@@ -9,8 +9,8 @@ class Errors extends LightController{
 
         $this->view->set_template("basic");
 
-        $this->view->add_style("/css/style.css");
-        $this->view->add_style("/css/error.css");
+        $this->view->add_style("css/style.css");
+        $this->view->add_style("css/error.css");
 
         $this->view->add_section("menu", "sections/menu");
         $this->view->add_section("footer", "sections/footer");

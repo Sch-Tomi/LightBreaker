@@ -8,10 +8,10 @@
 
             $this->view->set_template("basic");
 
-            $this->view->add_style("/css/style.css");
-            $this->view->add_style("/css/modal.css");
-            $this->view->add_style("/css/welcome.css");
-            $this->view->add_style("/css/login.css");
+            $this->view->add_style("css/style.css");
+            $this->view->add_style("css/modal.css");
+            $this->view->add_style("css/welcome.css");
+            $this->view->add_style("css/login.css");
 
 
 
@@ -22,6 +22,7 @@
         public function index(){
             $this->view->add_section("sidebar", "sections/sidebar");
             $this->view->show("welcome");
+
         }
 
     }

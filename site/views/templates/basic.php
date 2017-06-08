@@ -1,11 +1,22 @@
+<?php
+    $this->load_lib("AuthenticationLib");
+    $this->load_lib("MenuHelperLib");
+    $this->load_lib("Config");
+
+    $auth = $this->lib("AuthenticationLib");
+    $helper = $this->lib("MenuHelperLib");
+    $config =  $this->lib("Config");
+
+?>
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <title>Light Breaker</title>
-    <link rel='shortcut icon' type='image/x-icon' href='/img/favicon.ico' />
-
+    <link rel='shortcut icon' type='image/x-icon' href='img/favicon.ico' />
+    <base href="<?php echo $config->get("app_folder") ?>/">
     <?php
     foreach($this->styles as $file){?>
         <link rel="stylesheet" href="<?php echo $file; ?>" type="text/css" /><?php

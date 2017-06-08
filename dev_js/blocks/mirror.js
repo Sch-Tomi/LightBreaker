@@ -1,7 +1,7 @@
 class Mirror extends MasterBlock {
     constructor(heading, x, y, moving, rotating, imgsrc = null) {
         if (imgsrc === null) {
-            super("/img/blocks/tukor.png", heading, x, y, moving, rotating)
+            super("img/blocks/tukor.png", heading, x, y, moving, rotating)
         } else {
             super(imgsrc, heading, x, y, moving, rotating)
         }
@@ -33,37 +33,37 @@ class Mirror extends MasterBlock {
     }
 
 
-    _getNewDirectionWithNormalMirrorPosition(direction){
-      switch (direction) {
-        case 0:
-          return [90]
-          break;
-        case 90:
-          return [0]
-          break
-        case 180:
-          return [270]
-          break;
-        case 270:
-          return [180]
-          break;
-      }
+    _getNewDirectionWithNormalMirrorPosition(direction) {
+        switch (direction) {
+            case 0:
+                return [90]
+                break;
+            case 90:
+                return [0]
+                break
+            case 180:
+                return [270]
+                break;
+            case 270:
+                return [180]
+                break;
+        }
     }
 
-    _getNewDirectionWithOpositeMirrorPosition(direction){
-      switch (direction) {
-        case 0:
-          return [270]
-          break;
-        case 90:
-          return [180]
-          break
-        case 180:
-          return [90]
-          break;
-        case 270:
-          return [0]
-          break;
-      }
+    _getNewDirectionWithOpositeMirrorPosition(direction) {
+        switch (direction) {
+            case 0:
+                return [270]
+                break;
+            case 90:
+                return [180]
+                break
+            case 180:
+                return [90]
+                break;
+            case 270:
+                return [0]
+                break;
+        }
     }
 }
